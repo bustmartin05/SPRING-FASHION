@@ -1,0 +1,109 @@
+/* ==========================================================================
+   DESIGN TOKENS & MODO DÍA / NOCHE PERSISTENTE
+   Paleta Sunset Luxury: Oro champagne, Rosa atardecer, Violeta crepúsculo, Obsidian
+   ========================================================================== */
+
+:root {
+  /* Fuentes */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Transición de tema */
+  --theme-transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+
+  /* Espaciado y Radios */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.18);
+  --shadow-glow: 0 0 35px rgba(245, 158, 11, 0.25);
+  --shadow-glow-pink: 0 0 35px rgba(236, 72, 153, 0.25);
+
+  /* Acentos de Marca compartidos */
+  --accent-gold: #f59e0b;
+  --accent-gold-hover: #d97706;
+  --accent-gold-light: #fef3c7;
+  --accent-pink: #ec4899;
+  --accent-pink-hover: #db2777;
+  --accent-purple: #8b5cf6;
+  --accent-sunset: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%);
+  --accent-sunset-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --accent-sunset-dark: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+  
+  /* Semáforo Financiero */
+  --status-green: #10b981;
+  --status-green-bg: rgba(16, 185, 129, 0.15);
+  --status-red: #ef4444;
+  --status-red-bg: rgba(239, 68, 68, 0.15);
+  --status-yellow: #f59e0b;
+  --status-yellow-bg: rgba(245, 158, 11, 0.15);
+}
+
+/* ==========================================================================
+   TEMA NOCHE / SUNSET DARK (Por Defecto)
+   ========================================================================== */
+[data-theme="dark"], :root:not([data-theme="light"]) {
+  color-scheme: dark;
+  
+  --bg-primary: #09090b;
+  --bg-secondary: #121216;
+  --bg-card: rgba(24, 24, 29, 0.75);
+  --bg-card-solid: #18181d;
+  --bg-card-hover: rgba(36, 36, 44, 0.85);
+  --bg-input: rgba(18, 18, 22, 0.9);
+  --bg-nav: rgba(9, 9, 11, 0.85);
+  --bg-modal: #131317;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #09090b;
+
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(245, 158, 11, 0.4);
+  --border-glass: rgba(255, 255, 255, 0.12);
+
+  --glass-bg: rgba(20, 20, 26, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(16px);
+  
+  --hero-overlay: linear-gradient(180deg, rgba(9, 9, 11, 0.3) 0%, rgba(9, 9, 11, 0.85) 80%, #09090b 100%);
+}
+
+/* ==========================================================================
+   TEMA DÍA / SUNSET LIGHT
+   ========================================================================== */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-primary: #fcfbfa;
+  --bg-secondary: #f4efe9;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-solid: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-input: #ffffff;
+  --bg-nav: rgba(252, 251, 250, 0.9);
+  --bg-modal: #ffffff;
+
+  --text-primary: #18181b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-highlight: rgba(217, 119, 6, 0.5);
+  --border-glass: rgba(0, 0, 0, 0.06);
+
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-blur: blur(16px);
+  
+  --hero-overlay: linear-gradient(180deg, rgba(252, 251, 250, 0.2) 0%, rgba(252, 251, 250, 0.85) 85%, #fcfbfa 100%);
+}

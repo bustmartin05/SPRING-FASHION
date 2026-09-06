@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/img/logo-icon.png">
+  <title>¡Pago Exitoso! | Spring Fashion 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .success-page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background: radial-gradient(circle at top, rgba(245, 158, 11, 0.12), transparent 60%), var(--bg-primary);
+    }
+    .success-card {
+      max-width: 540px;
+      width: 100%;
+      background: var(--bg-card);
+      border: 2px solid var(--accent-gold);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+    .success-icon-badge {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid var(--status-green);
+      color: var(--status-green);
+      font-size: 2.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .voucher-box {
+      background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin: 1.5rem 0;
+      color: #fff;
+      text-align: left;
+    }
+    .qr-container {
+      background: #fff;
+      padding: 0.75rem;
+      border-radius: var(--radius-md);
+      display: inline-block;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="success-page-wrapper">
+    <div class="success-card glass-panel">
+      <div class="success-icon-badge">
+        <i class="bi bi-check-lg"></i>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin-bottom: 0.75rem;">
+        <img src="/img/logo-icon.png" alt="Logo" style="width:48px; height:48px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(168,85,247,0.5));">
+      </div>
+      <span class="badge badge-sunset" style="margin-bottom: 0.5rem;">dLocal Go • Pago Confirmado</span>
+      <h1 style="font-size: 2rem; margin-bottom: 0.35rem;">¡Tu Entrada está Lista!</h1>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        Hemos confirmado tu pago mediante la pasarela segura. Presenta este voucher al ingresar.
+      </p>
+
+      <div class="voucher-box" id="voucher-details">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 1rem;">
+          <div>
+            <h3 style="margin:0; font-size:1.3rem;" id="v-event-title">SPRING FASHION 2026</h3>
+            <small style="color:var(--accent-gold);" id="v-event-location">Bodega Monteviejo, Mendoza</small>
+          </div>
+          <span class="badge badge-gold" id="v-tier-name">VIP Pass</span>
+        </div>
+
+        <div style="text-align: center;">
+          <div class="qr-container" id="v-qr-img">
+            <i class="bi bi-qr-code" style="font-size: 100px; color: #000;"></i>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight:700; color:var(--accent-gold);" id="v-code">
+            SF-CODE-2026
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); margin-top: 1rem; padding-top: 0.75rem; font-size: 0.88rem; display:flex; flex-direction:column; gap:0.35rem;">
+          <div>Titular: <strong id="v-buyer">-</strong></div>
+          <div>Cantidad: <strong id="v-quantity">1 Entrada</strong></div>
+          <div>Monto Total: <strong id="v-total" style="color:var(--status-green);">$0 ARS</strong></div>
+          <div id="v-promoter-row" style="display:none; color:var(--accent-pink);">
+            <i class="bi bi-person-heart"></i> Vendedor Asociado: <strong id="v-promoter-code">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+        <button class="btn btn-gold" onclick="window.print()">
+          <i class="bi bi-printer-fill"></i> Imprimir / Guardar PDF
+        </button>
+        <a href="/" class="btn btn-outline">
+          <i class="bi bi-house-door-fill"></i> Volver a la Web
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (code) {
+        try {
+          const res = await fetch(`/api/tickets/verify/${encodeURIComponent(code)}`);
+          const data = await res.json();
+          if (data && data.sale) {
+            const s = data.sale;
+            document.getElementById('v-event-title').textContent = s.event_title || 'SPRING FASHION 2026';
+            document.getElementById('v-event-location').textContent = `${s.event_location || 'Mendoza'} • ${s.event_date || '21 Nov 2026'}`;
+            document.getElementById('v-tier-name').textContent = s.tier_name || 'Entrada Oficial';
+            document.getElementById('v-code').textContent = s.ticket_code;
+            document.getElementById('v-buyer').textContent = `${s.buyer_name} (${s.email})`;
+            document.getElementById('v-quantity').textContent = `${s.quantity} Entrada(s)`;
+            document.getElementById('v-total').textContent = `$${s.total_paid.toLocaleString('es-AR')} ${s.event_currency || 'ARS'}`;
+
+            if (s.promoter_code) {
+              const pRow = document.getElementById('v-promoter-row');
+              document.getElementById('v-promoter-code').textContent = s.promoter_code;
+              pRow.style.display = 'block';
+            }
+
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(s.qr_code || s.ticket_code)}`;
+            document.getElementById('v-qr-img').innerHTML = `<img src="${qrUrl}" alt="QR" style="width:130px; height:130px;">`;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+/* ==========================================================================
+   ESTILOS DEL PANEL DE ADMINISTRACIÓN / BACKOFFICE
+   ========================================================================== */
+
+.admin-portal-wrapper {
+  padding-top: 90px;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header del Dashboard */
+.admin-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  margin-bottom: 2rem;
+}
+
+.admin-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-title-wrap h1 {
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-title-wrap p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Barra de Navegación de Pestañas del Admin */
+.admin-nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.admin-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+.admin-tab-btn.active {
+  color: var(--accent-gold);
+  background: var(--bg-card);
+  border-color: var(--border-color) var(--border-color) var(--bg-card);
+  font-weight: 700;
+}
+
+.admin-tab-pane {
+  display: none;
+}
+
+.admin-tab-pane.active {
+  display: block;
+}
+
+/* ==========================================================================
+   SECCIÓN D: CALCULADORA FINANCIERA & KPI CARDS (TIEMPO REAL)
+   ========================================================================== */
+.finance-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.kpi-header span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.kpi-footer {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Semáforo Financiero Visual */
+.traffic-light-box {
+  background: var(--bg-card-solid);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.traffic-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.traffic-light-bulb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px currentColor;
+}
+
+.traffic-light-bulb.green {
+  background-color: var(--status-green);
+  color: var(--status-green);
+}
+
+.traffic-light-bulb.red {
+  background-color: var(--status-red);
+  color: var(--status-red);
+}
+
+.traffic-light-bulb.yellow {
+  background-color: var(--status-yellow);
+  color: var(--status-yellow);
+}
+
+/* ==========================================================================
+   SECCIÓN C: ROADMAP SECUENCIAL DE PRODUCCIÓN
+   ========================================================================== */
+.roadmap-progress-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.roadmap-progress-bar-wrap {
+  height: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: 1rem 0 2rem;
+}
+
+.roadmap-progress-bar-fill {
+  height: 100%;
+  background: var(--accent-sunset);
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.roadmap-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.roadmap-step-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: all 0.25s ease;
+}
+
+.roadmap-step-item.completed {
+  border-color: var(--status-green);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.roadmap-step-item.completed .step-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.roadmap-step-item.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: var(--bg-primary);
+}
+
+.step-info-col {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.step-number-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.roadmap-step-item.completed .step-number-badge {
+  background: var(--status-green);
+  color: #fff;
+  border-color: var(--status-green);
+}
+
+.roadmap-step-item.unlocked:not(.completed) .step-number-badge {
+  background: var(--accent-gold);
+  color: #18181b;
+  border-color: var(--accent-gold);
+}
+
+/* ==========================================================================
+   TABLAS CRUD & CRM MODULAR
+   ========================================================================== */
+.admin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-card-header h3 {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.crud-table th {
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.crud-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.crud-table tr:hover td {
+  background: var(--bg-card-hover);
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Media Uploader Preview */
+.media-preview-box {
+  width: 100%;
+  height: 160px;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-bottom: 1rem;
+  background: var(--bg-input);
+  overflow: hidden;
+  position: relative;
+}
+
+.media-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-preview-box:hover {
+  border-color: var(--accent-gold);
+}

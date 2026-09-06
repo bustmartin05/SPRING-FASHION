@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Fashion 2026 | Sunset, Runway & Networking Experience</title>
+  <link rel="icon" type="image/png" href="/img/logo-icon.png">
+  <link rel="apple-touch-icon" href="/img/logo-icon.png">
+  <meta name="description" content="Plataforma oficial del evento Spring Fashion 2026. Desfile show de alta costura, música en vivo al atardecer, networking y gastronomía de autor.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Hojas de Estilos Modulares -->
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/landing.css">
+  <link rel="stylesheet" href="/css/admin.css">
+
+  <!-- Motor de Escáner QR por Cámara HTML5 -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- ====================================================================
+       NAVBAR SUPERIOR (LANDING & HEADER)
+       ==================================================================== -->
+  <nav class="navbar glass-panel">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo" onclick="AdminApp.hideAdminPanel()">
+        <span class="brand-icon"><img src="/img/logo-icon.png" alt="Spring Fashion Logo"></span>
+        <span>SPRING <span class="text-gradient">FASHION</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#experiencia">Experiencia</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#artistas">Artistas</a></li>
+        <li><a href="#sponsors">Sponsors</a></li>
+        <li><a href="#entradas">Entradas</a></li>
+        <li><a href="#testimonios">Comunidad</a></li>
+        <li><a href="#alianzas">Alianzas B2B</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Switcher de Modo Día / Noche -->
+        <button class="btn-icon theme-toggle-btn" title="Cambiar Tema (Día/Noche)">
+          <i class="bi bi-sun-fill text-gold"></i>
+        </button>
+
+        <!-- Botón de Acceso Admin -->
+        <button class="btn btn-outline btn-sm open-admin-btn" title="Panel de Producción y Finanzas">
+          <i class="bi bi-speedometer2"></i> Backoffice
+        </button>
+
+        <!-- CTA Entradas -->
+        <a href="#entradas" class="btn btn-primary btn-sm">
+          <i class="bi bi-ticket-perforated-fill"></i> Tickets
+        </a>
+
+        <!-- Botón Hamburguesa Móvil -->
+        <button class="mobile-menu-toggle" aria-label="Menú">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====================================================================
+       VISTA 1: LANDING PÚBLICA DE EXPERIENCIA & CONVERSIÓN
+       ==================================================================== -->
+  <main id="public-landing-view">
+
+    <!-- 1. HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <video class="hero-video-bg" id="hero-video-element" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1920&q=80">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-models-walking-on-a-runway-at-a-fashion-show-41846-large.mp4" type="video/mp4">
+      </video>
+      <div class="hero-overlay-gradient"></div>
+
+      <div class="container hero-content">
+        <div class="hero-pill-badge">
+          <img src="/img/logo-icon.png" alt="Icon" style="width:16px; height:16px; object-fit:contain; vertical-align:middle; margin-right:4px;"> <span class="dynamic-event-type">Desfile Show / Sunset</span> • EDICIÓN 2026
+        </div>
+
+        <h1 class="hero-title">
+          SPRING <span class="text-gradient">FASHION</span>
+        </h1>
+
+        <p class="hero-subtitle" id="hero-tagline">
+          Donde la alta costura se fusiona con el atardecer, la música electrónica de vanguardia y el networking exclusivo.
+        </p>
+
+        <div class="hero-meta-bar">
+          <div class="hero-meta-item">
+            <i class="bi bi-calendar-event"></i>
+            <span>21 Noviembre 2026 • 17:30 HS</span>
+          </div>
+          <div class="hero-meta-item">
+            <i class="bi bi-geo-alt-fill"></i>
+            <span id="hero-location">Bodega Monteviejo, Valle de Uco, Mendoza</span>
+          </div>
+        </div>
+
+        <!-- Cuenta Regresiva -->
+        <div class="countdown-box">
+          <div class="countdown-unit">
+            <div class="countdown-number" id="countdown-days">00</div>
+            <div class="countdown-label">Días</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-number" id="countdown-hours">00</div>
+            <div class="countdown-label">Horas</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-number" id="countdown-mins">00</div>
+            <div class="countdown-label">Min</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-number" id="countdown-secs">00</div>
+            <div class="countdown-label">Seg</div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#entradas" class="btn btn-primary" style="font-size:1.05rem; padding: 0.9rem 2.2rem;">
+            <i class="bi bi-ticket-perforated-fill"></i> Reservar Pases
+          </a>
+          <button class="btn btn-outline" onclick="LandingApp.openLightbox('https://assets.mixkit.co/videos/preview/mixkit-models-walking-on-a-runway-at-a-fashion-show-41846-large.mp4', 'video', 'Aftermovie Oficial Teaser')">
+            <i class="bi bi-play-circle-fill text-gold"></i> Ver Aftermovie Teaser
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SECCIÓN LA EXPERIENCIA -->
+    <section class="section-wrapper" id="experiencia">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Concepto Inmersivo</span>
+          <h2>Una Experiencia <span class="text-gradient">Multisensorial</span></h2>
+          <p id="experience-description">
+            Diseñada para amantes del buen vivir, la moda contemporánea, los vinos de alta gama y las conexiones de alto impacto.
+          </p>
+        </div>
+
+        <div class="experience-grid" id="experiences-grid-container">
+          <!-- Cargado dinámicamente desde base de datos -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. GALERÍA MULTIMEDIA INTERACTIVA (CARRUSEL 3S) -->
+    <section class="section-wrapper" id="galeria" style="background: var(--bg-secondary);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Multimedia</span>
+          <h2>Galería Interactiva & <span class="text-gradient">Aftermovie</span></h2>
+          <p>Revive la magia visual de nuestras ediciones anteriores. Carrusel dinámico y videos exclusivos.</p>
+        </div>
+
+        <div class="gallery-filters">
+          <button class="gallery-filter-btn active" data-category="todos">Todos</button>
+          <button class="gallery-filter-btn" data-category="desfile">Desfile</button>
+          <button class="gallery-filter-btn" data-category="sunset">Sunset Beats</button>
+          <button class="gallery-filter-btn" data-category="backstage">Backstage</button>
+          <button class="gallery-filter-btn" data-category="gastronomia">Gastronomía</button>
+          <button class="gallery-filter-btn" data-category="aftermovie">Aftermovie</button>
+        </div>
+
+        <div class="gallery-carousel-wrapper" id="gallery-carousel-wrapper">
+          <button class="gallery-nav-btn prev" id="gallery-prev-btn" title="Anterior" onclick="LandingApp.prevGallerySlide()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <div class="gallery-carousel-track" id="gallery-slides-track">
+            <!-- Slides renderizados por JS (Auto 3 segundos) -->
+          </div>
+          <button class="gallery-nav-btn next" id="gallery-next-btn" title="Siguiente" onclick="LandingApp.nextGallerySlide()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <div class="gallery-carousel-dots" id="gallery-dots-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SPEAKERS Y ARTISTAS INVITADOS -->
+    <section class="section-wrapper" id="artistas">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Talento & Lineup</span>
+          <h2>Speakers & <span class="text-gradient">Artistas Invitados</span></h2>
+          <p>Los referentes que marcarán el ritmo y el estilo en Spring Fashion 2026.</p>
+        </div>
+
+        <div class="speakers-grid" id="artists-grid-container">
+          <!-- Cargado dinámicamente desde base de datos -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SPONSORS Y MEDIA KIT -->
+    <section class="section-wrapper" id="sponsors">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Alianzas Estratégicas</span>
+          <h2>Marcas & <span class="text-gradient">Sponsors Aliados</span></h2>
+          <p>Compañías líderes que potencian la experiencia Spring Fashion.</p>
+        </div>
+
+        <div class="sponsors-wrapper" id="sponsors-container">
+          <!-- Cargado dinámicamente -->
+        </div>
+
+        <div class="mediakit-box">
+          <h3 style="margin-bottom: 0.5rem;"><i class="bi bi-file-earmark-pdf-fill text-gold"></i> Media Kit Oficial & Oportunidades Comerciales</h3>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 1.5rem;">
+            Accede a las métricas de alcance, perfiles de audiencia, stands sensoriales y paquetes de sponsoreo disponibles para la edición 2026.
+          </p>
+          <button class="btn btn-gold" id="btn-download-mediakit" onclick="LandingApp.downloadOrOpenMediaKit()">
+            <i class="bi bi-download"></i> Ver & Descargar Media Kit 2026 (PDF)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. VENTA DE ENTRADAS & TANDAS DINÁMICAS -->
+    <section class="section-wrapper" id="entradas" style="background: var(--bg-secondary);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Acreditación Oficial</span>
+          <h2>Entradas & <span class="text-gradient">Pases de Acceso</span></h2>
+          <p>Adquiere tu pase de manera segura y en cuotas con tecnología dLocal Go.</p>
+        </div>
+
+        <!-- Banner de Vendedor / Promotor si se accede con código -->
+        <div id="promoter-referral-banner" class="glass-panel" style="display: none; margin-bottom: 2rem; border-color: var(--accent-pink); padding: 1rem 1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i class="bi bi-person-check-fill" style="font-size:1.8rem; color:var(--accent-pink);"></i>
+              <div>
+                <strong style="display:block;">¡Acceso con Vendedor Oficial: <span id="promoter-banner-name">Promotor</span>!</strong>
+                <span style="font-size:0.85rem; color:var(--text-secondary);">Comisión y split procesados automáticamente por dLocal Go.</span>
+              </div>
+            </div>
+            <span class="badge badge-purple" id="promoter-banner-code">PROMO</span>
+          </div>
+        </div>
+
+        <div class="pricing-grid" id="ticket-tiers-container">
+          <!-- Cargado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. TESTIMONIOS VIP & CARRUSEL (5S) -->
+    <section class="section-wrapper" id="testimonios">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Comunidad VIP</span>
+          <h2>Lo Que Dice Nuestra <span class="text-gradient">Audiencia</span></h2>
+          <p>Reseñas verificadas de asistentes y referentes que han vivido la experiencia en ediciones anteriores.</p>
+        </div>
+
+        <div class="carousel-wrapper">
+          <div class="testimonial-slide-container" id="testimonial-slides-box">
+            <!-- Slides renderizados por JS -->
+          </div>
+
+          <div class="carousel-controls">
+            <button class="btn-icon" onclick="LandingApp.prevSlide()" title="Anterior">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <div class="carousel-dots" id="carousel-dots-box"></div>
+            <button class="btn-icon" onclick="LandingApp.nextSlide()" title="Siguiente">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 8. MINI FORMULARIO DE COMUNIDAD / CAPTACIÓN DE LEADS -->
+        <div class="community-form-card glass-panel">
+          <h3 style="margin-bottom: 0.5rem;"><i class="bi bi-chat-heart-fill text-gold"></i> ¿Estuviste en ediciones anteriores o quieres ser parte de la comunidad?</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.25rem;">
+            Deja tu comentario y regístrate para recibir preventas exclusivas, beneficios y novedades antes que nadie.
+          </p>
+
+          <form id="community-feedback-form">
+            <div style="margin-bottom: 1rem;">
+              <label style="display:block; font-size: 0.85rem; color:var(--text-muted); margin-bottom:0.35rem;">Tu Calificación del Evento:</label>
+              <div class="star-rating-selector" id="community-star-picker">
+                <i class="bi bi-star-fill active" data-rating="1"></i>
+                <i class="bi bi-star-fill active" data-rating="2"></i>
+                <i class="bi bi-star-fill active" data-rating="3"></i>
+                <i class="bi bi-star-fill active" data-rating="4"></i>
+                <i class="bi bi-star-fill active" data-rating="5"></i>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label>Tu Nombre y Apellido:</label>
+                <input type="text" id="community-name" class="form-control" placeholder="Ej.: Sofía Navarro" required>
+              </div>
+              <div class="form-group">
+                <label>Tu Correo Electrónico (Mailing List):</label>
+                <input type="email" id="community-email" class="form-control" placeholder="sofia@email.com" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Tu Opinión o Expectativa para Spring Fashion 2026:</label>
+              <textarea id="community-comment" class="form-control" placeholder="Cuéntanos qué te pareció la experiencia o qué diseñador/DJ te gustaría ver este año..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-gold">
+              <i class="bi bi-send-fill"></i> Compartir y Registrarme
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FAQ ACORDEÓN -->
+    <section class="section-wrapper" id="faq" style="background: var(--bg-secondary);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Preguntas Frecuentes</span>
+          <h2>Todo lo Que Necesitas <span class="text-gradient">Saber</span></h2>
+          <p>Respuestas claras sobre accesos, pagos con dLocal Go y logística.</p>
+        </div>
+
+        <div class="faq-accordion">
+          <div class="faq-item active">
+            <button class="faq-question">
+              <span>¿Qué medios de pago acepta la plataforma?</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              Procesamos todos los pagos de forma segura a través de <strong>dLocal Go</strong>. Puedes pagar con Tarjetas de Crédito y Débito nacionales e internacionales (Visa, Mastercard), Transferencias Bancarias, QR y pagos en efectivo locales.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cuál es el código de vestimenta (Dress Code)?</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              El dress code oficial es <strong>Sunset Chic & Elegante Vanguardista</strong>. Recomendamos tonos cálidos, tierra, pasteles primaverales o negro elegante. Se aconseja calzado cómodo para el entorno natural de viñedos.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Cómo funciona el ingreso y acreditación con QR?</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              Al confirmar tu compra recibirás un voucher digital con código QR único y confirmación por correo electrónico. Presentando el QR desde tu smartphone en los molinetes de acceso, se validará y entregará tu pulsera de acreditación.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>¿Puedo comprar entradas con enlace de un promotor o RRPP?</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              Sí, accediendo mediante el link del vendedor (ej. <code>dominio.com/lucas</code>), el sistema le asigna su comisión automáticamente a través del contrato Split Payments de dLocal Go.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. PORTAL DE ALIANZAS B2B (TABS) -->
+    <section class="section-wrapper" id="alianzas">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Portal B2B</span>
+          <h2>Alianzas Comerciales & <span class="text-gradient">Staff</span></h2>
+          <p>Postula a tu marca para sponsoreo o a tu empresa para formar parte de la producción técnica y artística.</p>
+        </div>
+
+        <div class="b2b-portal glass-panel">
+          <div class="b2b-tabs-nav">
+            <button class="b2b-tab-btn active" data-tab="tab-b2b-sponsor">
+              <i class="bi bi-gem"></i> Quiero ser Sponsor / Marca
+            </button>
+            <button class="b2b-tab-btn" data-tab="tab-b2b-staff">
+              <i class="bi bi-briefcase-fill"></i> Staff / Proveedores
+            </button>
+          </div>
+
+          <div class="b2b-tab-pane active" id="tab-b2b-sponsor">
+            <form id="b2b-sponsor-form">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Nombre de la Empresa / Marca:</label>
+                  <input type="text" id="sp-company" class="form-control" placeholder="Ej.: Stella Winery" required>
+                </div>
+                <div class="form-group">
+                  <label>Nombre del Contacto:</label>
+                  <input type="text" id="sp-contact" class="form-control" placeholder="Ej.: Juan Pérez" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Email Corporativo:</label>
+                  <input type="email" id="sp-email" class="form-control" placeholder="alianzas@marca.com" required>
+                </div>
+                <div class="form-group">
+                  <label>Teléfono / WhatsApp:</label>
+                  <input type="tel" id="sp-phone" class="form-control" placeholder="+54 9 11 ...">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Nivel de Sponsoreo de Interés:</label>
+                <select id="sp-tier" class="form-control">
+                  <option value="Platinum">Platinum Partner (Exclusividad de categoría + Stand central)</option>
+                  <option value="Gold">Gold Sponsor (Activación de marca + Branding pasarela)</option>
+                  <option value="Silver">Silver Sponsor (Presencia en medios + Giftings)</option>
+                  <option value="Media Partner">Media Partner (Prensa, Radio & Cobertura TV/Streaming)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Propuesta o Idea de Activación:</label>
+                <textarea id="sp-proposal" class="form-control" placeholder="Detalla qué tipo de activación o presencia busca tu marca..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="bi bi-send-check-fill"></i> Enviar Postulación de Sponsor
+              </button>
+            </form>
+          </div>
+
+          <div class="b2b-tab-pane" id="tab-b2b-staff">
+            <form id="b2b-staff-form">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Nombre de Profesional / Empresa:</label>
+                  <input type="text" id="st-name" class="form-control" placeholder="Ej.: Lumina Audiovisual" required>
+                </div>
+                <div class="form-group">
+                  <label>Rubro de Especialidad:</label>
+                  <select id="st-category" class="form-control" required>
+                    <option value="DJ / Música en vivo">DJ / Música en vivo</option>
+                    <option value="Sonido, Luces y Pantallas LED">Sonido, Luces y Pantallas LED</option>
+                    <option value="Artistas de show y Modelos">Artistas de show y Modelos</option>
+                    <option value="Fotógrafos y Realizadores Audiovisuales">Fotógrafos y Realizadores Audiovisuales</option>
+                    <option value="Stands de trabajo / Activaciones">Stands de trabajo / Activaciones</option>
+                    <option value="Seguridad y Control de accesos">Seguridad y Control de accesos</option>
+                    <option value="Catering / Barras y Vinos">Catering / Barras y Vinos</option>
+                    <option value="Otro">Otro Rubro Especializado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Email de Contacto:</label>
+                  <input type="email" id="st-email" class="form-control" placeholder="contacto@staff.com" required>
+                </div>
+                <div class="form-group">
+                  <label>Teléfono:</label>
+                  <input type="tel" id="st-phone" class="form-control" placeholder="+54 9 11 ...">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Portafolio / Experiencia Previa (Links o Detalle):</label>
+                <textarea id="st-experience" class="form-control" placeholder="Cuéntanos sobre tus trabajos anteriores en eventos y producciones..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-gold btn-block">
+                <i class="bi bi-briefcase"></i> Postularme como Proveedor / Staff
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER PÚBLICO -->
+    <footer class="main-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <div class="brand-logo" style="margin-bottom: 1rem;">
+              <span class="brand-icon"><img src="/img/logo-icon.png" alt="Spring Fashion Logo"></span>
+              <span>SPRING <span class="text-gradient">FASHION</span></span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+              La cumbre anual donde convergen la moda, el vino de autor, el arte y el networking de alto impacto.
+            </p>
+            <div class="footer-socials">
+              <a href="https://instagram.com" target="_blank" title="Instagram"><i class="bi bi-instagram"></i></a>
+              <a href="https://tiktok.com" target="_blank" title="TikTok"><i class="bi bi-tiktok"></i></a>
+              <a href="https://youtube.com" target="_blank" title="YouTube"><i class="bi bi-youtube"></i></a>
+              <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Navegación</h4>
+            <ul>
+              <li><a href="#experiencia">La Experiencia</a></li>
+              <li><a href="#galeria">Galería & Teaser</a></li>
+              <li><a href="#artistas">Speakers & DJs</a></li>
+              <li><a href="#entradas">Entradas & Pases</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>B2B & Prensa</h4>
+            <ul>
+              <li><a href="#sponsors">Marcas Aliadas</a></li>
+              <li><a href="#alianzas">Ser Sponsor</a></li>
+              <li><a href="#alianzas">Postular Staff</a></li>
+              <li><a href="javascript:void(0)" onclick="LandingApp.openMediaKitModal()">Media Kit 2026</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Producción</h4>
+            <ul>
+              <li><a href="javascript:void(0)" class="open-admin-btn"><i class="bi bi-shield-lock-fill text-gold"></i> Panel Admin</a></li>
+              <li><a href="#faq">Preguntas Frecuentes</a></li>
+              <li><a href="#testimonios">Comunidad VIP</a></li>
+              <li><span style="font-size:0.85rem; color:var(--text-muted);">Bodega Monteviejo, Mendoza</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© 2026 Spring Fashion Experience. Todos los derechos reservados.</div>
+          <div>Pagos Seguros y Encriptados • Producción Integral</div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ====================================================================
+       VISTA 2: PANEL DE ADMINISTRACIÓN / BACKOFFICE (PROTEGIDO)
+       ==================================================================== -->
+  <div id="admin-portal-view" style="display: none;">
+    <div class="admin-portal-wrapper">
+      
+      <header class="admin-header">
+        <div class="container admin-header-flex">
+          <div class="admin-title-wrap">
+            <h1><i class="bi bi-gear-wide-connected text-gold"></i> Backoffice de Producción & Finanzas</h1>
+            <p id="admin-auth-status-badge">Conectado como Administrador del Evento</p>
+          </div>
+
+          <div class="admin-header-actions">
+            <button class="btn btn-outline btn-sm" onclick="AdminApp.hideAdminPanel()">
+              <i class="bi bi-globe"></i> Ver Landing Pública
+            </button>
+            <button class="btn btn-outline btn-sm" id="admin-logout-btn">
+              <i class="bi bi-box-arrow-right text-red"></i> Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="container" style="flex-grow: 1;">
+        <!-- Pestañas de Navegación del Panel -->
+        <div class="admin-nav-tabs">
+          <button class="admin-tab-btn active" data-tab="tab-adm-roadmap">
+            <i class="bi bi-map-fill text-gold"></i> Roadmap de Producción
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-finances">
+            <i class="bi bi-calculator-fill"></i> Finanzas & Rentabilidad
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-config">
+            <i class="bi bi-sliders"></i> Formato & Evento
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-promoters">
+            <i class="bi bi-person-badge-fill text-gold"></i> Vendedores & RRPP (Split)
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-scanner">
+            <i class="bi bi-qr-code-scan text-gold"></i> Escáner QR & Control de Accesos
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-expenses">
+            <i class="bi bi-people-fill"></i> Rubros, Staff & Costos
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-crm">
+            <i class="bi bi-people-fill text-gold"></i> CRM & Compradores
+          </button>
+          <button class="admin-tab-btn" data-tab="tab-adm-media">
+            <i class="bi bi-images"></i> Sponsors, Galería & Comunidad
+          </button>
+        </div>
+
+        <!-- ================================================================
+             TAB 1: ROADMAP SECUENCIAL DE PRODUCCIÓN (PRIMERO)
+             ================================================================ -->
+        <div class="admin-tab-pane active" id="tab-adm-roadmap">
+          <div class="roadmap-progress-container">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3 style="margin:0;"><i class="bi bi-signpost-split-fill text-gold"></i> Hoja de Ruta Secuencial de Producción</h3>
+              <span id="admin-roadmap-progress-text" class="badge badge-gold">0% Completado</span>
+            </div>
+
+            <div class="roadmap-progress-bar-wrap">
+              <div class="roadmap-progress-bar-fill" id="admin-roadmap-progress-fill" style="width: 0%;"></div>
+            </div>
+            <small style="color:var(--text-secondary); display:block; margin-top:0.5rem;">
+              Marca cada hito completado para llevar un control estricto de las fases previas al día del evento.
+            </small>
+          </div>
+
+          <div class="roadmap-timeline" id="admin-roadmap-list">
+            <!-- Cargado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 2: FINANZAS, COSTOS & RENTABILIDAD
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-finances">
+          <div class="finance-kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Venta Total de Entradas</span>
+                <div class="kpi-icon" style="background: rgba(245,158,11,0.15); color: var(--accent-gold);">
+                  <i class="bi bi-ticket-perforated-fill"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpi-total-revenue">$0</div>
+              <div class="kpi-footer" id="kpi-tickets-sold">0 Entradas vendidas</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Costos Totales Acordados</span>
+                <div class="kpi-icon" style="background: rgba(239,68,68,0.15); color: var(--status-red);">
+                  <i class="bi bi-cash-stack"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpi-total-expenses" style="color:var(--status-red);">$0</div>
+              <div class="kpi-footer" id="kpi-expenses-paid">0% ya abonado a proveedores</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Comisiones RRPP (Split)</span>
+                <div class="kpi-icon" style="background: rgba(168,85,247,0.15); color: var(--accent-pink);">
+                  <i class="bi bi-person-badge-fill"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpi-total-commissions" style="color:var(--accent-pink);">$0</div>
+              <div class="kpi-footer" id="kpi-promoters-sales">Generadas por vendedores</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Ganancia Neta Estimada</span>
+                <div class="kpi-icon" style="background: rgba(16,185,129,0.15); color: var(--status-green);">
+                  <i class="bi bi-graph-up-arrow"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="kpi-net-profit" style="color:var(--status-green);">$0</div>
+              <div class="kpi-footer" id="kpi-profit-margin">Margen: 0%</div>
+            </div>
+          </div>
+
+          <!-- Calculadora Dinámica de Rentabilidad -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="bi bi-calculator text-gold"></i> Simulador y Calculadora de Rentabilidad en Tiempo Real</h3>
+            </div>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1.5rem;">
+              Simula escenarios proyectando entradas vendidas y tickets promedio para proyectar tu punto de equilibrio (Break-even).
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+              <div class="form-group">
+                <label>Pases Proyectados a Vender:</label>
+                <input type="number" id="calc-projected-tickets" class="form-control" value="300" min="1">
+              </div>
+              <div class="form-group">
+                <label>Precio Promedio por Pase ($):</label>
+                <input type="number" id="calc-avg-price" class="form-control" value="25000" min="1000">
+              </div>
+              <div class="form-group">
+                <label>Aporte de Sponsors ($):</label>
+                <input type="number" id="calc-sponsor-revenue" class="form-control" value="500000" min="0">
+              </div>
+            </div>
+
+            <div class="payout-summary-box glass-panel" style="padding:1.25rem; border-radius: var(--radius-md); border:1px solid var(--border-color);">
+              <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:1rem; text-align:center;">
+                <div>
+                  <small style="color:var(--text-muted);">Ingreso Bruto Simulado</small>
+                  <div style="font-size:1.2rem; font-weight:700; color:var(--text-primary);" id="sim-gross-rev">$0</div>
+                </div>
+                <div>
+                  <small style="color:var(--text-muted);">Costos Totales Reales</small>
+                  <div style="font-size:1.2rem; font-weight:700; color:var(--status-red);" id="sim-costs">$0</div>
+                </div>
+                <div>
+                  <small style="color:var(--text-muted);">Punto de Equilibrio</small>
+                  <div style="font-size:1.2rem; font-weight:700; color:var(--accent-gold);" id="sim-breakeven">0 Entradas</div>
+                </div>
+                <div>
+                  <small style="color:var(--text-muted);">Resultado Neto Simulado</small>
+                  <div style="font-size:1.2rem; font-weight:700; color:var(--status-green);" id="sim-net">$0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 3: FORMATO Y DETALLES DEL EVENTO (CONFIGURACIÓN)
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-config">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="bi bi-sliders text-gold"></i> Configuración General del Evento</h3>
+            </div>
+
+            <form id="admin-event-config-form">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Nombre Oficial del Evento:</label>
+                  <input type="text" id="cfg-event-title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Tipo / Formato de Evento:</label>
+                  <input type="text" id="cfg-event-type" class="form-control" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Fecha del Evento:</label>
+                  <input type="date" id="cfg-event-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Hora de Inicio:</label>
+                  <input type="time" id="cfg-event-time" class="form-control" required>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Locación / Venue:</label>
+                  <input type="text" id="cfg-event-location" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Moneda Principal:</label>
+                  <select id="cfg-event-currency" class="form-control">
+                    <option value="ARS">ARS ($ Pesos Argentinos)</option>
+                    <option value="USD">USD ($ Dólares)</option>
+                    <option value="BRL">BRL (R$ Reales)</option>
+                    <option value="CLP">CLP ($ Pesos Chilenos)</option>
+                    <option value="MXN">MXN ($ Pesos Mexicanos)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Video Teaser de Fondo (Hero MP4 URL):</label>
+                <input type="url" id="cfg-event-video-url" class="form-control">
+              </div>
+
+              <!-- Media Kit PDF Upload / URL -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label>Media Kit PDF (URL Directa):</label>
+                  <input type="text" id="cfg-mediakit-url" class="form-control" placeholder="https://... o sube archivo a la derecha">
+                </div>
+                <div class="form-group">
+                  <label>Subir Archivo Media Kit (PDF):</label>
+                  <input type="file" id="cfg-mediakit-file-upload" class="form-control" accept="application/pdf">
+                </div>
+              </div>
+
+              <!-- Pasarela dLocal Go (Producción Encriptada) -->
+              <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; border: 1px solid var(--border-color);">
+                <h4 style="margin-top:0; margin-bottom:0.75rem;"><i class="bi bi-shield-lock-fill text-gold"></i> Pasarela dLocal Go (Checkout de Producción)</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                  <div class="form-group" style="margin:0;">
+                    <label>Entorno dLocal Go:</label>
+                    <select id="cfg-dlocal-env" class="form-control">
+                      <option value="production">Producción Oficial (En Vivo)</option>
+                      <option value="sandbox">Sandbox (Pruebas)</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin:0;">
+                    <label>API Key dLocal Go:</label>
+                    <input type="text" id="cfg-dlocal-key" class="form-control" placeholder="Clave de API dLocal">
+                  </div>
+                  <div class="form-group" style="margin:0;">
+                    <label>API Secret dLocal Go:</label>
+                    <input type="password" id="cfg-dlocal-secret" class="form-control" placeholder="••••••••••••••••">
+                  </div>
+                </div>
+                <small style="color:var(--text-muted); font-size:0.75rem; margin-top:0.6rem; display:block;"><i class="bi bi-shield-check text-green"></i> <strong>Protegido:</strong> Las credenciales están encriptadas y enmascaradas en el servidor. Si no deseas modificarlas, déjalas como están al guardar.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Estado del Evento:</label>
+                <select id="cfg-event-status" class="form-control">
+                  <option value="activo">Activo / Preventa en Curso</option>
+                  <option value="sold_out">Sold Out (Agotado)</option>
+                  <option value="finalizado">Finalizado</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Descripción Completa:</label>
+                <textarea id="cfg-event-description" class="form-control" rows="3"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-gold">
+                <i class="bi bi-check2-circle"></i> Guardar Configuración de Evento
+              </button>
+            </form>
+          </div>
+
+          <!-- Gestor Dinámico de Precios y Cupos de Entradas -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3><i class="bi bi-ticket-detailed-fill text-gold"></i> Gestor Dinámico de Entradas y Tandas</h3>
+                <small style="color:var(--text-secondary);">Modifica el nombre, precio, stock, etiqueta y estado (activa, agotada u oculta) en tiempo real.</small>
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="AdminApp.openNewTierModal()">
+                <i class="bi bi-plus-circle-fill"></i> + Crear Nueva Tanda / Pase
+              </button>
+            </div>
+            <div id="admin-tiers-editor-container">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Gestor de Experiencias Multisensoriales -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3><i class="bi bi-stars text-gold"></i> Experiencias Multisensoriales</h3>
+                <small style="color:var(--text-secondary);">Agrega, edita o elimina las experiencias que se exhiben en la landing pública.</small>
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="AdminApp.openNewExperienceModal()">
+                <i class="bi bi-plus-circle-fill"></i> + Nueva Experiencia
+              </button>
+            </div>
+            <div id="admin-experiences-container">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Gestor de Talento & Lineup / Speakers -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3><i class="bi bi-people-fill text-gold"></i> Talento & Lineup / Speakers & Artistas Invitados</h3>
+                <small style="color:var(--text-secondary);">Gestiona los diseñadores, DJs y referentes destacados que se mostrarán en la web.</small>
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="AdminApp.openNewArtistModal()">
+                <i class="bi bi-plus-circle-fill"></i> + Nuevo Artista / Speaker
+              </button>
+            </div>
+            <div id="admin-artists-container">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 4: GESTOR DE PROMOTORES / VENDEDORES / SPLIT PAYMENTS
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-promoters">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3><i class="bi bi-person-badge-fill text-gold"></i> Vendedores, RRPP y Promotores (Split Payments)</h3>
+                <small style="color:var(--text-secondary);">Cada vendedor cuenta con su enlace directo (ej.: dominio.com/lucas) y contrato dLocal Go para comisionar automáticamente.</small>
+              </div>
+              <button class="btn btn-gold btn-sm" onclick="AdminApp.openNewPromoterModal()">
+                <i class="bi bi-plus-circle-fill"></i> + Nuevo Vendedor / RRPP
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="crud-table">
+                <thead>
+                  <tr>
+                    <th>Nombre & Contacto</th>
+                    <th>Código Promotor</th>
+                    <th>Enlace Directo Vendedor</th>
+                    <th>Comisión %</th>
+                    <th>Entradas Vendidas</th>
+                    <th>Total Ganado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="promoters-table-body">
+                  <!-- Cargado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 5: ESCÁNER QR & CONTROL DE ACCESOS EN PUERTA
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-scanner">
+          <!-- Estadísticas de Accesos en Vivo -->
+          <div class="finance-kpi-grid" style="margin-bottom:2rem;">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Entradas Acreditadas (Escaneadas)</span>
+                <div class="kpi-icon" style="background: rgba(16,185,129,0.15); color: var(--status-green);">
+                  <i class="bi bi-qr-code-scan"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="stats-qr-scanned" style="color:var(--status-green);">0</div>
+              <div class="kpi-footer">Personas que ya ingresaron</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Total Entradas Vendidas</span>
+                <div class="kpi-icon" style="background: rgba(245,158,11,0.15); color: var(--accent-gold);">
+                  <i class="bi bi-ticket-perforated-fill"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="stats-qr-total">0</div>
+              <div class="kpi-footer">Pases confirmados por dLocal Go</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Pendientes por Ingresar</span>
+                <div class="kpi-icon" style="background: rgba(239,68,68,0.15); color: var(--status-red);">
+                  <i class="bi bi-hourglass-split"></i>
+                </div>
+              </div>
+              <div class="kpi-value" id="stats-qr-remaining" style="color:var(--status-yellow);">0</div>
+              <div class="kpi-footer">Faltantes por llegar al evento</div>
+            </div>
+          </div>
+
+          <!-- Lector con Cámara en Vivo y Validación Manual -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3><i class="bi bi-camera-video-fill text-gold"></i> Escáner de Cámara en Vivo</h3>
+                <div style="display:flex; gap:0.5rem;">
+                  <button type="button" class="btn btn-sm btn-gold" id="btn-start-camera" onclick="AdminApp.startQrCamera()">
+                    <i class="bi bi-camera"></i> Activar Cámara
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline text-red" id="btn-stop-camera" onclick="AdminApp.stopQrCamera()" style="display:none;">
+                    <i class="bi bi-stop-circle"></i> Detener
+                  </button>
+                </div>
+              </div>
+
+              <!-- Visor de Cámara -->
+              <div id="qr-camera-reader" style="width: 100%; min-height: 270px; background: #09090b; border-radius: var(--radius-md); overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; border: 1px dashed var(--border-color); margin-bottom: 1rem;">
+                <div id="qr-camera-placeholder" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                  <i class="bi bi-camera-fill" style="font-size: 3rem; opacity: 0.4; display: block; margin-bottom: 0.5rem;"></i>
+                  <p style="margin: 0; font-size: 0.9rem;">Haz clic en <strong>"Activar Cámara"</strong> para escanear tickets en vivo.</p>
+                </div>
+              </div>
+
+              <!-- Selector de Cámara -->
+              <div id="qr-camera-select-wrap" style="display:none; margin-bottom: 1rem;">
+                <label style="font-size:0.8rem; color:var(--text-muted);">Seleccionar Cámara:</label>
+                <select id="qr-camera-select" class="form-control" onchange="AdminApp.switchQrCamera(this.value)"></select>
+              </div>
+
+              <!-- Validación Manual -->
+              <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+                <label style="font-size:0.85rem; font-weight:600; margin-bottom:0.5rem; display:block;">O valida ingresando el código manualmente:</label>
+                <form id="qr-scanner-input-form" onsubmit="AdminApp.handleManualQrSubmit(event)">
+                  <div style="display:flex; gap:0.5rem;">
+                    <input type="text" id="qr-manual-code-input" class="form-control" placeholder="Ej.: SF-SD8J-1099 o pega la URL del QR" style="font-family:var(--font-mono); font-size:1.05rem;" required>
+                    <button type="submit" class="btn btn-gold" style="white-space:nowrap; padding: 0.75rem 1.25rem;">
+                      <i class="bi bi-shield-check"></i> Validar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Resultado de la Validación en Tiempo Real -->
+            <div class="admin-card" style="display:flex; flex-direction:column; justify-content:center;">
+              <div id="qr-scan-result-card" style="display:none; border-radius: var(--radius-md); padding: 1.5rem;">
+                <!-- Cargado dinámicamente -->
+              </div>
+              <div id="qr-scanner-placeholder" style="text-align:center; padding: 2.5rem; color:var(--text-muted);">
+                <i class="bi bi-qr-code" style="font-size:3.5rem; display:block; margin-bottom:0.75rem; opacity:0.4;"></i>
+                <p style="margin:0; font-size: 0.95rem;">Apunta al QR con la cámara o ingresa el código para validar la acreditación del asistente.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 6: GESTOR MODULAR DE RECURSOS, STAFF Y RUBROS (CRUD & FILTROS)
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-expenses">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3><i class="bi bi-people-fill text-gold"></i> Staff, Proveedores y Presupuestos por Rubro</h3>
+                <small style="color:var(--text-secondary);">Gestiona, busca, filtra y edita los presupuestos acordados con cada proveedor en vivo.</small>
+              </div>
+              <div style="display:flex; gap:0.5rem;">
+                <button class="btn btn-outline btn-sm" onclick="AdminApp.openNewCategoryModal()">
+                  <i class="bi bi-plus-circle"></i> + Agregar nuevo rubro
+                </button>
+                <button class="btn btn-gold btn-sm" onclick="AdminApp.openNewProviderModal()">
+                  <i class="bi bi-person-plus-fill"></i> + Registrar Proveedor
+                </button>
+              </div>
+            </div>
+
+            <!-- Barra de Búsqueda y Filtro de Rubros -->
+            <div style="display:flex; gap:1rem; margin-bottom: 1.5rem; flex-wrap:wrap;">
+              <div style="flex-grow:1; min-width:240px; position:relative;">
+                <input type="text" id="providers-search-input" class="form-control" placeholder="🔍 Buscar por proveedor, contacto o notas...">
+              </div>
+              <div style="width:240px;">
+                <select id="providers-category-filter" class="form-control">
+                  <option value="todos">Todos los Rubros</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="crud-table">
+                <thead>
+                  <tr>
+                    <th>Rubro</th>
+                    <th>Proveedor / Ítem</th>
+                    <th>Contacto</th>
+                    <th>Costo Acordado</th>
+                    <th>Estado de Pago</th>
+                    <th>Notas</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="providers-table-body">
+                  <!-- Cargado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 7: CRM DE COMPRADORES DE TICKETS (DEDICADO)
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-crm">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div>
+                <h3><i class="bi bi-people-fill text-gold"></i> Registro de Compradores & CRM</h3>
+                <small style="color:var(--text-secondary);">Detalle de todas las compras confirmadas, promotor asignado y opción para reenviar comprobantes.</small>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="AdminApp.exportSalesCSV()">
+                <i class="bi bi-filetype-csv"></i> Exportar a CSV
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="crud-table">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Comprador</th>
+                    <th>Pase</th>
+                    <th>Cant.</th>
+                    <th>Total</th>
+                    <th>Vendedor/RRPP</th>
+                    <th>Acceso</th>
+                    <th>Medio</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="sales-crm-table-body">
+                  <!-- Cargado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TAB 8: SPONSORS, GALERÍA & COMUNIDAD
+             ================================================================ -->
+        <div class="admin-tab-pane" id="tab-adm-media">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3><i class="bi bi-gem text-gold"></i> Agregar Sponsor Aliado</h3>
+              </div>
+
+              <form id="admin-add-sponsor-form">
+                <div class="form-group">
+                  <label>Nombre de la Empresa:</label>
+                  <input type="text" id="admin-sp-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Nivel / Tier:</label>
+                  <select id="admin-sp-tier" class="form-control">
+                    <option value="Platinum">Platinum</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Media Partner">Media Partner</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>URL Logo:</label>
+                  <input type="text" id="admin-sp-logo" class="form-control" placeholder="https://... o sube archivo abajo">
+                </div>
+                <div class="form-group">
+                  <label>Subir Logo desde tu equipo:</label>
+                  <input type="file" id="admin-sp-file-upload" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                  <label>Sitio Web:</label>
+                  <input type="url" id="admin-sp-web" class="form-control" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                  <label>Propuesta / Activación:</label>
+                  <input type="text" id="admin-sp-prop" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-gold btn-block">
+                  <i class="bi bi-plus-lg"></i> Guardar Sponsor
+                </button>
+              </form>
+            </div>
+
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3><i class="bi bi-images text-gold"></i> Agregar Foto / Video a Galería</h3>
+              </div>
+
+              <form id="admin-add-gallery-form">
+                <div class="form-group">
+                  <label>Título / Descripción de la Foto o Video:</label>
+                  <input type="text" id="admin-gal-title" class="form-control" placeholder="Ej.: Pasarela Principal - Sunset 2026" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                  <div class="form-group">
+                    <label>Tipo de Medio:</label>
+                    <select id="admin-gal-type" class="form-control">
+                      <option value="image">Fotografía</option>
+                      <option value="video">Video MP4</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Categoría de Galería:</label>
+                    <select id="admin-gal-cat" class="form-control">
+                      <option value="desfile">Desfile</option>
+                      <option value="sunset">Sunset Beats</option>
+                      <option value="backstage">Backstage</option>
+                      <option value="gastronomia">Gastronomía</option>
+                      <option value="aftermovie">Aftermovie</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>URL del Archivo:</label>
+                  <input type="text" id="admin-gal-url" class="form-control" placeholder="https://... o sube archivo abajo">
+                </div>
+                <div class="form-group">
+                  <label>Subir Archivo (Imagen o Video MP4):</label>
+                  <input type="file" id="admin-gal-file-upload" class="form-control" accept="image/*,video/mp4">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="bi bi-cloud-arrow-up-fill"></i> Agregar a Galería
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="bi bi-list-check text-gold"></i> Sponsors Registrados</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="crud-table">
+                <thead>
+                  <tr>
+                    <th>Logo</th>
+                    <th>Empresa</th>
+                    <th>Contacto</th>
+                    <th>Nivel</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-sponsors-table-body">
+                  <!-- Cargado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="bi bi-grid text-gold"></i> Galería Actual en Base de Datos</h3>
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap:1rem;" id="admin-gallery-preview-grid">
+              <!-- Cargado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Moderador de Reseñas y Correos de la Comunidad -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="bi bi-chat-quote-fill text-gold"></i> Moderador de Reseñas y Correos de la Comunidad</h3>
+            </div>
+
+            <div class="table-responsive">
+              <table class="crud-table">
+                <thead>
+                  <tr>
+                    <th>Usuario & Email</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="feedback-crm-table-body">
+                  <!-- Cargado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODALES UNIVERSALES
+       ==================================================================== -->
+
+  <!-- Modal 1: Login Admin -->
+  <div class="modal-overlay" id="admin-login-modal">
+    <div class="modal-content" style="max-width: 440px;">
+      <button class="modal-close" onclick="LandingApp.closeModal('admin-login-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-shield-lock-fill text-gold"></i> Acceso Backoffice</h3>
+        <p>Ingresa tus credenciales de producción para gestionar el evento.</p>
+      </div>
+
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label>Usuario Administrador:</label>
+          <input type="text" id="admin-user-input" class="form-control" placeholder="admin2" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input type="password" id="admin-pass-input" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block" style="margin-top: 1rem;">
+          <i class="bi bi-box-arrow-in-right"></i> Ingresar al Backoffice
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Checkout con Pasarela dLocal Go y Código de Promotor -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-content" style="max-width: 580px;">
+      <button class="modal-close" onclick="LandingApp.closeModal('checkout-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <span class="badge badge-sunset" id="checkout-tier-badge">Pase Oficial</span>
+        <h3 id="checkout-tier-name" style="margin-top:0.35rem;">Seleccionando Pase</h3>
+        <p>Acreditación digital inmediata con código QR seguro.</p>
+      </div>
+
+      <form id="checkout-form">
+        <div style="display: flex; align-items:center; justify-content:space-between; margin-bottom: 1.25rem; background: var(--bg-secondary); padding: 0.85rem 1.25rem; border-radius: var(--radius-md);">
+          <div>
+            <div style="font-weight:700;">Cantidad de Entradas:</div>
+            <small style="color:var(--text-muted);" id="checkout-unit-price">$0 ARS / unidad</small>
+          </div>
+          <div style="display: flex; align-items:center; gap: 0.75rem;">
+            <button type="button" class="btn-icon" id="btn-qty-minus"><i class="bi bi-dash"></i></button>
+            <span id="checkout-qty-display" style="font-weight:700; font-size: 1.1rem; width: 24px; text-align:center;">1</span>
+            <button type="button" class="btn-icon" id="btn-qty-plus"><i class="bi bi-plus"></i></button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Nombre y Apellido del Titular:</label>
+            <input type="text" id="chk-name" class="form-control" placeholder="Ej.: Valentina Rossi" required>
+          </div>
+          <div class="form-group">
+            <label>Correo Electrónico (para QR y Ticket):</label>
+            <input type="email" id="chk-email" class="form-control" placeholder="valentina@email.com" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono / WhatsApp de Contacto:</label>
+          <input type="tel" id="chk-phone" class="form-control" placeholder="+54 9 11 5555-4444" required>
+        </div>
+
+        <div class="form-group">
+          <label>Vendedor o Promotor Asignado (Opcional):</label>
+          <input type="text" id="chk-promo" class="form-control" placeholder="Ej.: LUCAS2026 (o detectado por link)">
+          <small id="chk-promo-feedback" style="display:block; margin-top:0.25rem; font-size:0.8rem;"></small>
+        </div>
+
+        <!-- Resumen de Pago -->
+        <div style="background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(236,72,153,0.1)); border: 1px solid var(--accent-gold); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+            <span>Total a Pagar:</span>
+            <strong style="font-size: 1.4rem; color: var(--accent-gold);" id="checkout-total-price">$0 ARS</strong>
+          </div>
+          <small style="color:var(--text-secondary); display:block;">
+            <i class="bi bi-shield-check text-green"></i> Pasarela Oficial dLocal Go (Tarjetas de Crédito, Débito, Transferencia y Efectivo).
+          </small>
+        </div>
+
+        <button type="submit" class="btn btn-gold btn-block" style="font-size: 1.1rem; padding: 0.9rem;">
+          <i class="bi bi-credit-card-2-front-fill"></i> Abonar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Crear Nueva Tanda de Entradas -->
+  <div class="modal-overlay" id="new-tier-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('new-tier-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-ticket-perforated-fill text-gold"></i> Nueva Tanda / Tipo de Pase</h3>
+      </div>
+      <form id="form-add-tier">
+        <div class="form-group">
+          <label>Nombre del Pase:</label>
+          <input type="text" id="add-tier-name" class="form-control" placeholder="Ej.: Early Bird - General" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Precio Unitario ($):</label>
+            <input type="number" id="add-tier-price" class="form-control" placeholder="25000" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Stock / Cupos Disponibles:</label>
+            <input type="number" id="add-tier-stock" class="form-control" placeholder="150" min="1" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Etiqueta / Badge (Opcional):</label>
+          <input type="text" id="add-tier-badge" class="form-control" placeholder="Ej.: Más Popular, Preventa 1">
+        </div>
+        <div class="form-group">
+          <label>Beneficios Incluidos (1 por línea):</label>
+          <textarea id="add-tier-benefits" class="form-control" rows="3" placeholder="Acceso a pasarela principal&#10;Copa de vino de bienvenida&#10;Acceso a sunset DJ set"></textarea>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-plus-circle"></i> Guardar Tanda</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Editar Tanda de Entradas -->
+  <div class="modal-overlay" id="edit-tier-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('edit-tier-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-pencil-square text-gold"></i> Editar Tanda / Pase</h3>
+      </div>
+      <form id="form-edit-tier">
+        <input type="hidden" id="edit-tier-id">
+        <div class="form-group">
+          <label>Nombre del Pase:</label>
+          <input type="text" id="edit-tier-name" class="form-control" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Precio ($):</label>
+            <input type="number" id="edit-tier-price" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Stock Total:</label>
+            <input type="number" id="edit-tier-stock" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Estado del Pase:</label>
+          <select id="edit-tier-status" class="form-control">
+            <option value="activa">Activa (Disponible para compra)</option>
+            <option value="agotada">Agotada (Muestra Sold Out)</option>
+            <option value="oculta">Oculta (No visible en la web)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Etiqueta / Badge:</label>
+          <input type="text" id="edit-tier-badge" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Beneficios Incluidos (1 por línea):</label>
+          <textarea id="edit-tier-benefits" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-check2"></i> Actualizar Pase</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Nueva Experiencia -->
+  <div class="modal-overlay" id="new-experience-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('new-experience-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-stars text-gold"></i> Nueva Experiencia Multisensorial</h3>
+      </div>
+      <form id="form-add-experience">
+        <div class="form-group">
+          <label>Título de la Experiencia:</label>
+          <input type="text" id="add-exp-title" class="form-control" placeholder="Ej.: Pasarela Sunset & Live Music" required>
+        </div>
+        <div class="form-group">
+          <label>Descripción:</label>
+          <textarea id="add-exp-desc" class="form-control" rows="3" placeholder="Detalla de qué se trata la experiencia..." required></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Ícono (Bootstrap Icon):</label>
+            <input type="text" id="add-exp-icon" class="form-control" placeholder="bi-stars" value="bi-stars">
+          </div>
+          <div class="form-group">
+            <label>Orden de visualización:</label>
+            <input type="number" id="add-exp-order" class="form-control" value="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL de Imagen:</label>
+          <input type="url" id="add-exp-image" class="form-control" placeholder="https://images.unsplash.com/...">
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-plus-circle"></i> Guardar Experiencia</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 6: Editar Experiencia -->
+  <div class="modal-overlay" id="edit-experience-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('edit-experience-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-pencil-square text-gold"></i> Editar Experiencia Multisensorial</h3>
+      </div>
+      <form id="form-edit-experience">
+        <input type="hidden" id="edit-exp-id">
+        <div class="form-group">
+          <label>Título de la Experiencia:</label>
+          <input type="text" id="edit-exp-title" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Descripción:</label>
+          <textarea id="edit-exp-desc" class="form-control" rows="3" required></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Ícono (Bootstrap Icon):</label>
+            <input type="text" id="edit-exp-icon" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Orden:</label>
+            <input type="number" id="edit-exp-order" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL de Imagen:</label>
+          <input type="url" id="edit-exp-image" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-check2"></i> Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 7: Nuevo Artista / Speaker -->
+  <div class="modal-overlay" id="new-artist-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('new-artist-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-person-plus-fill text-gold"></i> Nuevo Artista / Speaker</h3>
+      </div>
+      <form id="form-add-artist">
+        <div class="form-group">
+          <label>Nombre Completo / Artístico:</label>
+          <input type="text" id="add-art-name" class="form-control" placeholder="Ej.: Mariano Santos" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Rol / Título:</label>
+            <input type="text" id="add-art-role" class="form-control" placeholder="Headliner DJ / Diseñador" required>
+          </div>
+          <div class="form-group">
+            <label>Categoría:</label>
+            <select id="add-art-cat" class="form-control">
+              <option value="DJ">DJ / Productor</option>
+              <option value="Diseñador">Diseñador de Alta Costura</option>
+              <option value="Speaker">Speaker & Referente</option>
+              <option value="Artista">Artista Visual</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Biografía Breve:</label>
+          <textarea id="add-art-bio" class="form-control" rows="2" placeholder="Trayectoria destacada..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Foto de Perfil (URL):</label>
+          <input type="url" id="add-art-image" class="form-control" placeholder="https://images.unsplash.com/...">
+        </div>
+        <div class="form-group">
+          <label>Perfil de Instagram (URL):</label>
+          <input type="url" id="add-art-insta" class="form-control" placeholder="https://instagram.com/...">
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-plus-circle"></i> Guardar Artista</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 8: Editar Artista / Speaker -->
+  <div class="modal-overlay" id="edit-artist-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('edit-artist-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-pencil-square text-gold"></i> Editar Artista / Speaker</h3>
+      </div>
+      <form id="form-edit-artist">
+        <input type="hidden" id="edit-art-id">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input type="text" id="edit-art-name" class="form-control" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Rol:</label>
+            <input type="text" id="edit-art-role" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Categoría:</label>
+            <select id="edit-art-cat" class="form-control">
+              <option value="DJ">DJ / Productor</option>
+              <option value="Diseñador">Diseñador de Alta Costura</option>
+              <option value="Speaker">Speaker & Referente</option>
+              <option value="Artista">Artista Visual</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Biografía:</label>
+          <textarea id="edit-art-bio" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label>URL Foto:</label>
+          <input type="url" id="edit-art-image" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Instagram URL:</label>
+          <input type="url" id="edit-art-insta" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-check2"></i> Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 9: Nuevo Vendedor / Promotor (RRPP) -->
+  <div class="modal-overlay" id="new-promoter-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('new-promoter-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-person-badge-fill text-gold"></i> Registrar Nuevo Vendedor / RRPP</h3>
+      </div>
+      <form id="form-add-promoter">
+        <div class="form-group">
+          <label>Nombre y Apellido del Vendedor:</label>
+          <input type="text" id="add-prom-name" class="form-control" placeholder="Ej.: Lucas Gómez" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Código Promotor (Único):</label>
+            <input type="text" id="add-prom-code" class="form-control" placeholder="LUCAS2026" style="text-transform:uppercase;" required>
+          </div>
+          <div class="form-group">
+            <label>Slug Enlace (/slug):</label>
+            <input type="text" id="add-prom-slug" class="form-control" placeholder="lucas" style="text-transform:lowercase;" required>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Email del Vendedor:</label>
+            <input type="email" id="add-prom-email" class="form-control" placeholder="lucas@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>Comisión Acordada (%):</label>
+            <input type="number" id="add-prom-commission" class="form-control" value="10" min="0" max="100" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Split Code dLocal Go (Contrato de Colaborador):</label>
+          <input type="text" id="add-prom-split-code" class="form-control" placeholder="split_collab_xxxxxx (opcional)">
+          <small style="color:var(--text-muted); font-size:0.75rem;">Si está vacío, se calcula y gestiona internamente en la plataforma.</small>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-person-plus"></i> Registrar Promotor</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 10: Nuevo Rubro -->
+  <div class="modal-overlay" id="new-category-modal">
+    <div class="modal-content" style="max-width: 440px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('new-category-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-tag-fill text-gold"></i> Agregar Nuevo Rubro</h3>
+      </div>
+      <form id="form-add-category">
+        <div class="form-group">
+          <label>Nombre del Rubro:</label>
+          <input type="text" id="add-cat-name" class="form-control" placeholder="Ej.: Seguridad & Control de Accesos" required>
+        </div>
+        <div class="form-group">
+          <label>Presupuesto Estimado ($):</label>
+          <input type="number" id="add-cat-budget" class="form-control" placeholder="500000" min="0" value="0">
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-plus-circle"></i> Guardar Rubro</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 11: Registrar Proveedor -->
+  <div class="modal-overlay" id="new-provider-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('new-provider-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-person-lines-fill text-gold"></i> Registrar Proveedor / Gasto</h3>
+      </div>
+      <form id="form-add-provider">
+        <div class="form-group">
+          <label>Rubro Asociado:</label>
+          <select id="provider-category-select" class="form-control" required></select>
+        </div>
+        <div class="form-group">
+          <label>Nombre del Proveedor o Ítem:</label>
+          <input type="text" id="add-prov-name" class="form-control" placeholder="Ej.: Escenario & Sonido Andes" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Costo Acordado ($):</label>
+            <input type="number" id="add-prov-cost" class="form-control" placeholder="1200000" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Contacto / Teléfono:</label>
+            <input type="text" id="add-prov-contact" class="form-control" placeholder="+54 9 261 ...">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notas o Forma de Pago:</label>
+          <textarea id="add-prov-notes" class="form-control" rows="2" placeholder="Ej.: 50% de seña abonado, 50% al finalizar montaje..."></textarea>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="add-prov-is-paid" style="width:18px; height:18px;">
+          <label for="add-prov-is-paid" style="margin:0; font-size:0.9rem;">¿Ya fue totalmente pagado?</label>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-plus-circle"></i> Guardar Proveedor</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 12: Editar Proveedor -->
+  <div class="modal-overlay" id="edit-provider-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="AdminApp.closeModal('edit-provider-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <h3><i class="bi bi-pencil-square text-gold"></i> Editar Proveedor / Gasto</h3>
+      </div>
+      <form id="form-edit-provider">
+        <input type="hidden" id="edit-provider-id">
+        <div class="form-group">
+          <label>Rubro:</label>
+          <select id="edit-provider-category-select" class="form-control" required></select>
+        </div>
+        <div class="form-group">
+          <label>Nombre del Proveedor:</label>
+          <input type="text" id="edit-provider-name-input" class="form-control" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Costo Acordado ($):</label>
+            <input type="number" id="edit-provider-cost-input" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Contacto:</label>
+            <input type="text" id="edit-provider-contact-input" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notas:</label>
+          <textarea id="edit-provider-notes-input" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="edit-provider-paid-check" style="width:18px; height:18px;">
+          <label for="edit-provider-paid-check" style="margin:0; font-size:0.9rem;">Totalmente Pagado</label>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block"><i class="bi bi-check2"></i> Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 13: Media Kit Modal -->
+  <div class="modal-overlay" id="mediakit-modal">
+    <div class="modal-content" style="max-width: 600px;">
+      <button class="modal-close" onclick="LandingApp.closeModal('mediakit-modal')"><i class="bi bi-x-lg"></i></button>
+      <div class="modal-header">
+        <span class="badge badge-gold">Prensa & Marcas</span>
+        <h3 style="margin-top:0.35rem;"><i class="bi bi-file-earmark-pdf-fill text-gold"></i> Media Kit Oficial 2026</h3>
+      </div>
+      <div style="padding: 1rem 0; line-height: 1.6; color: var(--text-secondary);">
+        <p>Descarga la propuesta comercial para conocer perfiles demográficos de asistentes, espacios de stands sensoriales, beneficios de branding en streaming y cobertura en prensa nacional.</p>
+      </div>
+      <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <button class="btn btn-outline" onclick="LandingApp.closeModal('mediakit-modal')">Cerrar</button>
+        <button class="btn btn-gold" onclick="LandingApp.downloadOrOpenMediaKit()"><i class="bi bi-download"></i> Descargar Documento (PDF)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 14: Lightbox Multimedia -->
+  <div class="modal-overlay" id="lightbox-modal">
+    <div class="modal-content" style="max-width: 850px; background: transparent; border: none; padding: 0; box-shadow: none;">
+      <button class="modal-close" onclick="LandingApp.closeLightbox()" style="top:-35px; right:0; color:#fff; font-size:1.8rem;"><i class="bi bi-x-lg"></i></button>
+      <div id="lightbox-media-container" style="display:flex; justify-content:center; align-items:center;"></div>
+      <div id="lightbox-title" style="text-align:center; color:#fff; margin-top:0.75rem; font-weight:600;"></div>
+    </div>
+  </div>
+
+  <!-- Contenedor Universal de Notificaciones Toast -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts Modulares -->
+  <script src="/js/api.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/landing.js"></script>
+  <script src="/js/admin.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
