@@ -136,7 +136,8 @@ const API = {
   // Roadmap
   roadmap: {
     getSteps: () => API.request('/api/roadmap', { method: 'GET' }),
-    toggleStep: (id) => API.request(`/api/roadmap/${id}/toggle`, { method: 'PUT' })
+    toggleStep: (id) => API.request(`/api/roadmap/${id}/toggle`, { method: 'PUT' }),
+    updateAll: (steps) => API.request('/api/roadmap/update-all', { method: 'PUT', body: JSON.stringify({ steps }) })
   },
 
   // Feedback / Testimonials

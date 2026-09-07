@@ -201,7 +201,7 @@ const AdminApp = {
 
       if (!listContainer) return;
 
-      const completedCount = res.steps.filter(s => s.is_completed).length;
+      const completedCount = res.steps.filter(s => s.is_completed === 1 || s.is_completed === true).length;
       const totalCount = res.steps.length;
       const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
@@ -209,27 +209,26 @@ const AdminApp = {
       if (progressText) progressText.textContent = `${pct}% Completado (${completedCount}/${totalCount} Hitos)`;
 
       listContainer.innerHTML = res.steps.map(step => {
-        const isLocked = !step.is_unlocked && !step.is_completed;
+        const isDone = step.is_completed === 1 || step.is_completed === true;
         return `
-          <div class="roadmap-step-item ${step.is_completed ? 'completed' : (step.is_unlocked ? 'unlocked' : 'locked')}">
+          <div class="roadmap-step-item ${isDone ? 'completed' : 'unlocked'}" style="transition: all 0.3s ease;">
             <div class="step-info-col">
-              <div class="step-number-badge">
-                ${step.is_completed ? '<i class="bi bi-check-lg"></i>' : (isLocked ? '<i class="bi bi-lock-fill"></i>' : step.step_order)}
+              <div class="step-number-badge" style="cursor:pointer;" onclick="AdminApp.toggleRoadmapStep(${step.id})">
+                ${isDone ? '<i class="bi bi-check-lg" style="font-weight:900;"></i>' : step.step_order}
               </div>
-              <div>
-                <h4 class="step-title" style="margin:0 0 0.25rem 0;">${step.title}</h4>
-                <p style="margin:0; font-size:0.85rem; color:var(--text-secondary);">${step.description || ''}</p>
-                ${step.completed_at ? `<small style="color:var(--status-green);"><i class="bi bi-calendar-check"></i> Completado el ${new Date(step.completed_at).toLocaleDateString()}</small>` : ''}
+              <div style="flex-grow:1;">
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
+                  <h4 class="step-title" style="margin:0;">${step.title}</h4>
+                  ${isDone ? '<span class="badge badge-gold" style="font-size:0.75rem;"><i class="bi bi-check-circle-fill"></i> Listo</span>' : '<span class="badge" style="background:var(--bg-input); font-size:0.75rem; color:var(--text-muted);">En Progreso</span>'}
+                </div>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.4;">${step.description || ''}</p>
+                ${step.completed_at ? `<small style="color:var(--status-green); display:block; margin-top:0.35rem;"><i class="bi bi-calendar-check"></i> Completado el ${new Date(step.completed_at).toLocaleDateString()} a las ${new Date(step.completed_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</small>` : ''}
               </div>
             </div>
-            <div>
-              ${isLocked ? `
-                <span class="badge" style="background:var(--bg-input); color:var(--text-muted);"><i class="bi bi-lock"></i> Bloqueado</span>
-              ` : `
-                <button class="btn btn-sm ${step.is_completed ? 'btn-gold' : 'btn-primary'}" onclick="AdminApp.toggleRoadmapStep(${step.id})">
-                  <i class="bi ${step.is_completed ? 'bi-arrow-counterclockwise' : 'bi-check-circle-fill'}"></i> ${step.is_completed ? 'Desmarcar' : 'Completar Paso'}
-                </button>
-              `}
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="btn btn-sm ${isDone ? 'btn-gold' : 'btn-primary'}" onclick="AdminApp.toggleRoadmapStep(${step.id})" style="white-space:nowrap;">
+                <i class="bi ${isDone ? 'bi-arrow-counterclockwise' : 'bi-check-circle-fill'}"></i> ${isDone ? 'Desmarcar' : 'Completar Paso'}
+              </button>
             </div>
           </div>
         `;
@@ -243,7 +242,7 @@ const AdminApp = {
     try {
       const res = await API.roadmap.toggleStep(id);
       if (res.success) {
-        window.Toast.success('Progreso del Roadmap actualizado.');
+        window.Toast.success('Hito de producción actualizado en la base de datos.');
         await this.loadRoadmapAdmin();
       }
     } catch (err) {
@@ -251,18 +250,47 @@ const AdminApp = {
     }
   },
 
+  async saveAllRoadmapSteps() {
+    if (!this.roadmapSteps || this.roadmapSteps.length === 0) {
+      window.Toast.info('No hay pasos para guardar.');
+      return;
+    }
+    const saveBtn = document.getElementById('btn-save-roadmap');
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Guardando...';
+    }
+    try {
+      const res = await API.roadmap.updateAll(this.roadmapSteps);
+      if (res.success) {
+        window.Toast.success('¡Estado del Roadmap de Producción guardado correctamente!');
+        await this.loadRoadmapAdmin();
+      }
+    } catch (err) {
+      window.Toast.error(err.message || 'Error al guardar el roadmap.');
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="bi bi-floppy-fill"></i> Guardar Estado del Roadmap';
+      }
+    }
+  },
+
   // ==========================================
   // TAB 2: FINANZAS & RENTABILIDAD
   // ==========================================
+  financialData: null,
+
   async loadFinancialStats() {
     try {
       const data = await API.stats.getFinancial();
       if (!data || !data.financials) return;
 
       const f = data.financials;
+      this.financialData = f;
       const currency = (this.activeEvent && this.activeEvent.currency) ? this.activeEvent.currency : 'ARS';
 
-      const opCostEl = document.getElementById('kpi-operational-cost');
+      const opCostEl = document.getElementById('kpi-operational-cost') || document.getElementById('kpi-total-expenses');
       if (opCostEl) opCostEl.textContent = `$${f.total_operational_cost.toLocaleString('es-AR')} ${currency}`;
 
       const paidCostEl = document.getElementById('kpi-paid-cost');
@@ -271,10 +299,10 @@ const AdminApp = {
       const pendingCostEl = document.getElementById('kpi-pending-cost');
       if (pendingCostEl) pendingCostEl.textContent = `$${f.total_pending_cost.toLocaleString('es-AR')}`;
 
-      const grossRevEl = document.getElementById('kpi-gross-revenue');
+      const grossRevEl = document.getElementById('kpi-gross-revenue') || document.getElementById('kpi-total-revenue');
       if (grossRevEl) grossRevEl.textContent = `$${f.total_gross_revenue.toLocaleString('es-AR')} ${currency}`;
 
-      const ticketsCountEl = document.getElementById('kpi-tickets-count');
+      const ticketsCountEl = document.getElementById('kpi-tickets-count') || document.getElementById('kpi-tickets-sold');
       if (ticketsCountEl) ticketsCountEl.textContent = `${f.total_tickets_sold} tickets vendidos (${f.total_promoter_tickets || 0} por RRPP)`;
 
       const netEl = document.getElementById('kpi-net-profit');
@@ -287,10 +315,10 @@ const AdminApp = {
         }
       }
 
-      const marginPctEl = document.getElementById('kpi-margin-pct');
-      if (marginPctEl) marginPctEl.textContent = `${f.profit_margin_percentage}%`;
+      const marginPctEl = document.getElementById('kpi-margin-pct') || document.getElementById('kpi-profit-margin');
+      if (marginPctEl) marginPctEl.textContent = `Margen: ${f.profit_margin_percentage}%`;
 
-      const commEl = document.getElementById('kpi-promoters-commission');
+      const commEl = document.getElementById('kpi-promoters-commission') || document.getElementById('kpi-total-commissions');
       if (commEl) {
         commEl.textContent = `$${(f.total_commission_to_pay || 0).toLocaleString('es-AR')} ${currency}`;
       }
@@ -320,9 +348,91 @@ const AdminApp = {
           `;
         }).join('');
       }
+
+      // Inicializar y calcular simulador de rentabilidad
+      this.initProfitCalculator();
     } catch (err) {
       console.error('Error cargando finanzas:', err);
     }
+  },
+
+  initProfitCalculator() {
+    const savedConfig = localStorage.getItem('sf_simulation_config');
+    if (savedConfig) {
+      try {
+        const parsed = JSON.parse(savedConfig);
+        if (parsed.projected_tickets) {
+          const el = document.getElementById('calc-projected-tickets');
+          if (el) el.value = parsed.projected_tickets;
+        }
+        if (parsed.avg_price) {
+          const el = document.getElementById('calc-avg-price');
+          if (el) el.value = parsed.avg_price;
+        }
+        if (parsed.sponsor_revenue !== undefined) {
+          const el = document.getElementById('calc-sponsor-revenue');
+          if (el) el.value = parsed.sponsor_revenue;
+        }
+      } catch (e) {}
+    }
+
+    const tInput = document.getElementById('calc-projected-tickets');
+    const pInput = document.getElementById('calc-avg-price');
+    const sInput = document.getElementById('calc-sponsor-revenue');
+
+    [tInput, pInput, sInput].forEach(inp => {
+      if (inp && !inp.dataset.bound) {
+        inp.dataset.bound = 'true';
+        inp.addEventListener('input', () => this.recalculateSimulation());
+      }
+    });
+
+    this.recalculateSimulation();
+  },
+
+  recalculateSimulation() {
+    const tInput = document.getElementById('calc-projected-tickets');
+    const pInput = document.getElementById('calc-avg-price');
+    const sInput = document.getElementById('calc-sponsor-revenue');
+
+    const projTickets = parseFloat(tInput?.value) || 0;
+    const avgPrice = parseFloat(pInput?.value) || 0;
+    const sponsorRev = parseFloat(sInput?.value) || 0;
+
+    const totalCosts = (this.financialData && this.financialData.total_operational_cost) ? this.financialData.total_operational_cost : 0;
+    const currency = (this.activeEvent && this.activeEvent.currency) ? this.activeEvent.currency : 'ARS';
+
+    const simGross = (projTickets * avgPrice) + sponsorRev;
+    const simNet = simGross - totalCosts;
+    const breakeven = avgPrice > 0 ? Math.ceil(Math.max(0, totalCosts - sponsorRev) / avgPrice) : 0;
+
+    const grossEl = document.getElementById('sim-gross-rev');
+    const costsEl = document.getElementById('sim-costs');
+    const beEl = document.getElementById('sim-breakeven');
+    const netEl = document.getElementById('sim-net');
+
+    if (grossEl) grossEl.textContent = `$${simGross.toLocaleString('es-AR')} ${currency}`;
+    if (costsEl) costsEl.textContent = `$${totalCosts.toLocaleString('es-AR')} ${currency}`;
+    if (beEl) beEl.textContent = `${breakeven} Entradas`;
+    if (netEl) {
+      netEl.textContent = `$${simNet.toLocaleString('es-AR')} ${currency}`;
+      netEl.style.color = simNet >= 0 ? 'var(--status-green)' : 'var(--status-red)';
+    }
+  },
+
+  saveSimulationConfig() {
+    const tInput = document.getElementById('calc-projected-tickets');
+    const pInput = document.getElementById('calc-avg-price');
+    const sInput = document.getElementById('calc-sponsor-revenue');
+
+    const payload = {
+      projected_tickets: parseFloat(tInput?.value) || 300,
+      avg_price: parseFloat(pInput?.value) || 25000,
+      sponsor_revenue: parseFloat(sInput?.value) || 500000
+    };
+
+    localStorage.setItem('sf_simulation_config', JSON.stringify(payload));
+    window.Toast.success('¡Parámetros de la simulación de rentabilidad guardados exitosamente!');
   },
 
   // ==========================================

@@ -105,6 +105,15 @@
   <div class="checkout-wrapper">
     <!-- Columna Izquierda: Formulario de Pago -->
     <div>
+      <div id="sandbox-alert-banner" style="display:none; background: rgba(245, 158, 11, 0.12); border: 1px solid var(--accent-gold); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 1.5rem; color: #fff;">
+        <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700; color:var(--accent-gold); margin-bottom:0.35rem;">
+          <i class="bi bi-cone-striped" style="font-size:1.2rem;"></i> Modo de Prueba Activo (Sandbox)
+        </div>
+        <p style="margin:0; font-size:0.88rem; color:#cbd5e1; line-height:1.4;">
+          Esta compra se procesa en modo de simulación. Al presionar <strong>"Confirmar Pago de Prueba"</strong> se generará tu entrada oficial con código QR y se registrará la comisión del promotor sin realizar cargos en dinero real.
+        </p>
+      </div>
+
       <h2 style="font-size:1.4rem; margin-bottom:1.25rem;">Selecciona tu Medio de Pago</h2>
 
       <div class="payment-tab">
@@ -202,6 +211,12 @@
       const tier = params.get('tier') || 'Entrada Oficial';
       const buyer = params.get('buyer') || 'Asistente';
       const qty = params.get('qty') || '1';
+      const isSandbox = params.get('sandbox') === '1' || params.get('sandbox') === 'true';
+
+      const sandboxBanner = document.getElementById('sandbox-alert-banner');
+      if (sandboxBanner && isSandbox) {
+        sandboxBanner.style.display = 'block';
+      }
 
       document.getElementById('order-code').textContent = code;
       document.getElementById('order-tier').textContent = tier;
@@ -210,6 +225,13 @@
       document.getElementById('order-total').textContent = `$${amount.toLocaleString('es-AR')} ${currency}`;
       document.getElementById('btn-pay-amount').textContent = `$${amount.toLocaleString('es-AR')} ${currency}`;
       document.getElementById('card-name').value = buyer;
+
+      if (isSandbox) {
+        const btn = document.getElementById('btn-submit-payment');
+        if (btn) {
+          btn.innerHTML = `<i class="bi bi-shield-check"></i> Confirmar Pago de Prueba ($${amount.toLocaleString('es-AR')} ${currency})`;
+        }
+      }
 
       // Tabs de pago
       const tabs = document.querySelectorAll('.tab-item');
@@ -226,11 +248,13 @@
         e.preventDefault();
         const btn = document.getElementById('btn-submit-payment');
         btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Procesando Pago Seguro en dLocal Go...';
+        btn.innerHTML = isSandbox 
+          ? '<i class="bi bi-arrow-repeat spin"></i> Generando Entrada y Código QR de Prueba...' 
+          : '<i class="bi bi-arrow-repeat spin"></i> Procesando Pago Seguro en dLocal Go...';
 
         setTimeout(() => {
           window.location.href = `/payment-success.html?code=${encodeURIComponent(code)}`;
-        }, 1500);
+        }, 1200);
       });
     });
   </script>

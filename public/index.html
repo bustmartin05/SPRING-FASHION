@@ -607,16 +607,21 @@
              ================================================================ -->
         <div class="admin-tab-pane active" id="tab-adm-roadmap">
           <div class="roadmap-progress-container">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
               <h3 style="margin:0;"><i class="bi bi-signpost-split-fill text-gold"></i> Hoja de Ruta Secuencial de Producción</h3>
-              <span id="admin-roadmap-progress-text" class="badge badge-gold">0% Completado</span>
+              <div style="display:flex; gap:0.75rem; align-items:center;">
+                <span id="admin-roadmap-progress-text" class="badge badge-gold">0% Completado</span>
+                <button type="button" class="btn btn-gold btn-sm" id="btn-save-roadmap" onclick="AdminApp.saveAllRoadmapSteps()">
+                  <i class="bi bi-floppy-fill"></i> Guardar Estado del Roadmap
+                </button>
+              </div>
             </div>
 
             <div class="roadmap-progress-bar-wrap">
               <div class="roadmap-progress-bar-fill" id="admin-roadmap-progress-fill" style="width: 0%;"></div>
             </div>
             <small style="color:var(--text-secondary); display:block; margin-top:0.5rem;">
-              Marca cada hito completado para llevar un control estricto de las fases previas al día del evento.
+              Marca los hitos completados y presiona <strong>"Guardar Estado del Roadmap"</strong> para sincronizar tu progreso con el equipo.
             </small>
           </div>
 
@@ -677,8 +682,14 @@
 
           <!-- Calculadora Dinámica de Rentabilidad -->
           <div class="admin-card">
-            <div class="admin-card-header">
-              <h3><i class="bi bi-calculator text-gold"></i> Simulador y Calculadora de Rentabilidad en Tiempo Real</h3>
+            <div class="admin-card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <div>
+                <h3 style="margin:0;"><i class="bi bi-calculator text-gold"></i> Simulador y Calculadora de Rentabilidad en Tiempo Real</h3>
+                <small style="color:var(--text-secondary);">Proyecta entradas vendidas, tickets promedio y sponsors para estimar tu resultado neto y punto de equilibrio.</small>
+              </div>
+              <button type="button" class="btn btn-gold btn-sm" id="btn-save-simulation" onclick="AdminApp.saveSimulationConfig()">
+                <i class="bi bi-floppy-fill"></i> Guardar Simulación
+              </button>
             </div>
             <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1.5rem;">
               Simula escenarios proyectando entradas vendidas y tickets promedio para proyectar tu punto de equilibrio (Break-even).

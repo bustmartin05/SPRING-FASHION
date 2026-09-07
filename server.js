@@ -192,6 +192,8 @@ app.put('/api/events/:id', authenticateToken, async (req, res) => {
       finalApiKey = dlocal_api_key.trim();
     }
 
+    const finalEnv = (dlocal_env === 'sandbox' || dlocal_env === 'production') ? dlocal_env : (existing.dlocal_env || 'production');
+
     await dbAsync.run(
       `UPDATE events 
        SET title = ?, type = ?, tagline = ?, date = ?, location = ?, currency = ?,
@@ -200,15 +202,19 @@ app.put('/api/events/:id', authenticateToken, async (req, res) => {
            show_lineup = COALESCE(?, show_lineup, 1),
            mediakit_file_url = COALESCE(?, mediakit_file_url),
            mediakit_download_link = COALESCE(?, mediakit_download_link),
-           dlocal_env = COALESCE(?, dlocal_env, 'production'),
+           dlocal_env = ?,
            dlocal_api_key = ?,
            dlocal_api_secret = ?,
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
       [
-        title, type, tagline, date, location, currency || 'ARS', hero_video_url, banner_url, 
-        status, description, show_experiences, show_lineup, mediakit_file_url, 
-        mediakit_download_link, dlocal_env, finalApiKey, finalSecret, id
+        title || existing.title, type || existing.type, tagline || existing.tagline, 
+        date || existing.date, location || existing.location, currency || existing.currency || 'ARS', 
+        hero_video_url !== undefined ? hero_video_url : existing.hero_video_url, 
+        banner_url !== undefined ? banner_url : existing.banner_url, 
+        status || existing.status, description || existing.description, 
+        show_experiences, show_lineup, mediakit_file_url, 
+        mediakit_download_link, finalEnv, finalApiKey, finalSecret, id
       ]
     );
 
@@ -574,16 +580,16 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
 
     const activeApiKey = (event.dlocal_api_key && event.dlocal_api_key.trim()) || DLOCAL_API_KEY;
     const activeApiSecret = (event.dlocal_api_secret && event.dlocal_api_secret.trim()) || DLOCAL_API_SECRET;
-    const isProductionEnv = (event.dlocal_env === 'production') || (DLOCAL_ENV === 'production');
-    const dlocalEndpointUrl = isProductionEnv ? 'https://api.dlocalgo.com/v1' : 'https://api-sbx.dlocalgo.com/v1';
+    const isProductionEnv = (event.dlocal_env === 'production');
+    const dlocalEndpointUrl = 'https://api.dlocalgo.com/v1';
 
     let redirectUrl = null;
     let dlocalPaymentId = null;
 
-    // Llamar a dLocal Go API oficial si hay API Keys configuradas
-    if (activeApiKey && activeApiKey.length > 3 && activeApiSecret && activeApiSecret.length > 3) {
+    // Llamar a dLocal Go API oficial ÚNICAMENTE si está en Modo Producción Oficial
+    if (isProductionEnv && activeApiKey && activeApiKey.length > 5 && activeApiSecret && activeApiSecret.length > 5) {
       try {
-        console.log(`[dLocal Go] Conectando a ${dlocalEndpointUrl}/payments para orden ${ticketCode}...`);
+        console.log(`[dLocal Go Producción] Conectando a ${dlocalEndpointUrl}/payments para orden ${ticketCode}...`);
         let apiRes = await fetch(`${dlocalEndpointUrl}/payments`, {
           method: 'POST',
           headers: {
@@ -609,7 +615,6 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
             body: JSON.stringify(dlocalPayload)
           });
           dlocalRes = await apiRes.json();
-          console.log('[dLocal Go API Reintento Respuesta]:', dlocalRes);
         }
 
         if (apiRes.ok && dlocalRes.redirect_url) {
@@ -623,10 +628,10 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
       }
     }
 
-    // Si no hay keys reales o sandbox de prueba
+    // Modo Sandbox / Pruebas (o fallback): Simulación interna directa para probar códigos QR, escaneo y comisiones
     if (!redirectUrl) {
-      redirectUrl = `${APP_URL}/dlocal-checkout.html?code=${ticketCode}&amount=${totalAmount}&currency=${currency}&tier=${encodeURIComponent(tier.name)}&buyer=${encodeURIComponent(buyer_name)}&qty=${quantity}`;
-      dlocalPaymentId = 'DP-' + Math.floor(10000 + Math.random() * 90000);
+      redirectUrl = `${APP_URL}/dlocal-checkout.html?code=${ticketCode}&amount=${totalAmount}&currency=${currency}&tier=${encodeURIComponent(tier.name)}&buyer=${encodeURIComponent(buyer_name)}&qty=${quantity}&sandbox=1`;
+      dlocalPaymentId = 'SANDBOX-' + Math.floor(10000 + Math.random() * 90000);
     }
 
     // Insertar venta en base de datos
@@ -1251,7 +1256,7 @@ app.put('/api/roadmap/:id/toggle', authenticateToken, async (req, res) => {
     const completedAt = newCompleted ? new Date().toISOString() : null;
 
     await dbAsync.run(
-      `UPDATE roadmap_steps SET is_completed = ?, completed_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+      `UPDATE roadmap_steps SET is_completed = ?, completed_at = ?, is_unlocked = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
       [newCompleted, completedAt, id]
     );
 
@@ -1266,6 +1271,31 @@ app.put('/api/roadmap/:id/toggle', authenticateToken, async (req, res) => {
     res.json({ success: true, message: 'Progreso del roadmap actualizado', steps });
   } catch (err) {
     res.status(500).json({ error: 'Error al actualizar roadmap.' });
+  }
+});
+
+app.put('/api/roadmap/update-all', authenticateToken, async (req, res) => {
+  try {
+    const { steps } = req.body;
+    if (!Array.isArray(steps)) {
+      return res.status(400).json({ error: 'Formato de pasos inválido.' });
+    }
+
+    for (const step of steps) {
+      const isCompleted = step.is_completed ? 1 : 0;
+      const completedAt = isCompleted ? (step.completed_at || new Date().toISOString()) : null;
+      await dbAsync.run(
+        `UPDATE roadmap_steps 
+         SET is_completed = ?, completed_at = ?, is_unlocked = 1, updated_at = CURRENT_TIMESTAMP 
+         WHERE id = ?`,
+        [isCompleted, completedAt, step.id]
+      );
+    }
+
+    const updatedSteps = await dbAsync.all(`SELECT * FROM roadmap_steps ORDER BY step_order ASC`);
+    res.json({ success: true, message: 'Estado del Roadmap guardado exitosamente.', steps: updatedSteps });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al guardar estado del roadmap.' });
   }
 });
 
