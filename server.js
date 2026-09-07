@@ -628,10 +628,11 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
       }
     }
 
-    // Modo Sandbox / Pruebas (o fallback): Simulación interna directa para probar códigos QR, escaneo y comisiones
-    if (!redirectUrl) {
-      redirectUrl = `${APP_URL}/dlocal-checkout.html?code=${ticketCode}&amount=${totalAmount}&currency=${currency}&tier=${encodeURIComponent(tier.name)}&buyer=${encodeURIComponent(buyer_name)}&qty=${quantity}&sandbox=1`;
-      dlocalPaymentId = 'SANDBOX-' + Math.floor(10000 + Math.random() * 90000);
+    // Determinar si es modo prueba/sandbox (o si no se obtuvo URL de redirección oficial)
+    const isSandbox = !isProductionEnv || !redirectUrl;
+    if (isSandbox) {
+      redirectUrl = null;
+      dlocalPaymentId = dlocalPaymentId || ('SANDBOX-' + Math.floor(10000 + Math.random() * 90000));
     }
 
     // Insertar venta en base de datos
@@ -643,7 +644,7 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'confirmado')`,
       [
         tier.event_id, buyer_name, email, phone || '', tier_id, quantity, tier.price, totalAmount,
-        payment_method || 'dLocal Go', ticketCode, qrData, 
+        payment_method || (isSandbox ? 'Modo Prueba (Sandbox)' : 'dLocal Go'), ticketCode, qrData, 
         promoter ? promoter.id : null,
         promoter ? promoter.promo_code : null,
         splitCodeToSend,
@@ -697,7 +698,8 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
 
     res.json({
       success: true,
-      message: '¡Orden de pago dLocal Go generada con éxito!',
+      is_sandbox: isSandbox,
+      message: isSandbox ? '¡Entrada de prueba generada con éxito!' : '¡Orden de pago dLocal Go generada con éxito!',
       redirect_url: redirectUrl,
       dlocal_payment_id: dlocalPaymentId,
       sale: {
@@ -705,13 +707,14 @@ app.post('/api/payments/dlocal/create-checkout', async (req, res) => {
         ticket_code: ticketCode,
         buyer_name,
         email,
+        phone: phone || '',
         tier_name: tier.name,
         quantity,
         total_paid: totalAmount,
         currency,
         promoter_code: promoter ? promoter.promo_code : null,
         split_code: splitCodeToSend,
-        payment_method: 'dLocal Go',
+        payment_method: isSandbox ? 'Modo Prueba (Sandbox)' : (payment_method || 'dLocal Go'),
         qr_data: qrData,
         created_at: new Date().toISOString()
       }

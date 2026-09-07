@@ -1359,6 +1359,64 @@
     </div>
   </div>
 
+  <!-- Modal 2.5: Voucher y Ticket QR Digital (Confirmación Inmediata / Modo Prueba) -->
+  <div class="modal-overlay" id="voucher-modal">
+    <div class="modal-content" style="max-width: 520px; text-align: center;">
+      <button class="modal-close" onclick="LandingApp.closeModal('voucher-modal')"><i class="bi bi-x-lg"></i></button>
+      
+      <div style="width: 60px; height: 60px; background: rgba(16,185,129,0.15); border: 2px solid var(--status-green); color: var(--status-green); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 0.75rem;">
+        <i class="bi bi-check-lg"></i>
+      </div>
+
+      <span class="badge badge-sunset" id="voucher-status-badge" style="margin-bottom: 0.5rem; display:inline-block;">Acreditación Confirmada</span>
+      <h3 style="margin-top: 0.25rem; font-size: 1.5rem;" id="voucher-header-title">¡Tu Entrada está Lista!</h3>
+      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.25rem;">
+        Presenta este código QR en el acceso del evento para ingresar.
+      </p>
+
+      <!-- Caja del Voucher -->
+      <div style="background: linear-gradient(135deg, #18181b 0%, #27272a 100%); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; text-align: left;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 1rem;">
+          <div>
+            <h4 style="margin:0; font-size:1.15rem;" id="voucher-tier-name">Pase Oficial</h4>
+            <small style="color:var(--text-muted);" id="voucher-event-info">Spring Fashion 2026</small>
+          </div>
+          <span class="badge badge-gold" id="voucher-quantity">1 Pase(s)</span>
+        </div>
+
+        <div style="text-align: center; margin: 1rem 0;">
+          <div style="background: #fff; padding: 0.6rem; border-radius: var(--radius-md); display: inline-block;" id="voucher-qr-code">
+            <!-- QR generado por JS -->
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700; color: var(--accent-gold); margin-top: 0.5rem; letter-spacing: 0.05em;" id="voucher-code">
+            SF-XXXX-XXXX
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; font-size: 0.85rem; display:flex; flex-direction:column; gap:0.35rem; color: #cbd5e1;">
+          <div>Titular: <strong style="color:#fff;" id="voucher-buyer-name">-</strong></div>
+          <div>Monto Total: <strong style="color:var(--status-green);" id="voucher-total">$0 ARS</strong></div>
+          <div id="voucher-promoter-row" style="display:none; color:var(--accent-pink);">
+            <i class="bi bi-person-badge"></i> Vendedor / RRPP: <strong id="voucher-promoter-code">-</strong>
+          </div>
+          <div>Medio: <strong style="color:#fff;" id="voucher-method">dLocal Go</strong></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <button type="button" class="btn btn-gold btn-sm" onclick="LandingApp.copyVoucherCode()">
+          <i class="bi bi-copy"></i> Copiar Código
+        </button>
+        <a href="#" id="voucher-full-view-btn" target="_blank" class="btn btn-outline btn-sm">
+          <i class="bi bi-file-earmark-pdf"></i> Ver Voucher Completo
+        </a>
+        <button type="button" class="btn btn-outline btn-sm" onclick="LandingApp.closeModal('voucher-modal')">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal 3: Crear Nueva Tanda de Entradas -->
   <div class="modal-overlay" id="new-tier-modal">
     <div class="modal-content" style="max-width: 500px;">

@@ -679,15 +679,15 @@ const LandingApp = {
 
           if (res.success) {
             this.closeModal('checkout-modal');
-            if (res.redirect_url) {
-              if (window.Toast) window.Toast.info('Redirigiendo a la pasarela de pago oficial...');
-              window.location.href = res.redirect_url;
-            } else {
-              if (window.Toast) window.Toast.success('¡Entrada confirmada con éxito!');
+            if (res.is_sandbox || !res.redirect_url) {
+              if (window.Toast) window.Toast.success('¡Entrada de prueba generada con éxito!');
               if (typeof this.showTicketVoucher === 'function') {
                 this.showTicketVoucher(res.sale);
               }
               this.loadTicketTiers();
+            } else {
+              if (window.Toast) window.Toast.info('Redirigiendo a la pasarela de pago oficial...');
+              window.location.href = res.redirect_url;
             }
           } else {
             if (window.Toast) window.Toast.error(res.error || 'Error al procesar la compra.');
@@ -705,30 +705,89 @@ const LandingApp = {
   },
 
   showTicketVoucher(sale) {
+    if (!sale) return;
+    this.currentVoucherCode = sale.ticket_code;
+
     const modal = document.getElementById('voucher-modal');
     if (!modal) return;
 
     const bName = document.getElementById('voucher-buyer-name');
     const tName = document.getElementById('voucher-tier-name');
+    const evInfo = document.getElementById('voucher-event-info');
     const qtyEl = document.getElementById('voucher-quantity');
     const totEl = document.getElementById('voucher-total');
     const codeEl = document.getElementById('voucher-code');
     const methEl = document.getElementById('voucher-method');
+    const pRow = document.getElementById('voucher-promoter-row');
+    const pCode = document.getElementById('voucher-promoter-code');
+    const viewBtn = document.getElementById('voucher-full-view-btn');
 
-    if (bName) bName.textContent = sale.buyer_name;
-    if (tName) tName.textContent = sale.tier_name;
-    if (qtyEl) qtyEl.textContent = `${sale.quantity} Pase(s)`;
-    if (totEl) totEl.textContent = `$${sale.total_paid.toLocaleString('es-AR')} ${sale.currency || 'ARS'}`;
-    if (codeEl) codeEl.textContent = sale.ticket_code;
-    if (methEl) methEl.textContent = sale.payment_method || 'Pago Seguro';
+    if (bName) bName.textContent = sale.buyer_name || '-';
+    if (tName) tName.textContent = sale.tier_name || 'Entrada Oficial';
+    if (evInfo && this.activeEvent) {
+      evInfo.textContent = `${this.activeEvent.title || 'SPRING FASHION 2026'} • ${this.activeEvent.location || 'Mendoza'}`;
+    }
+    if (qtyEl) qtyEl.textContent = `${sale.quantity || 1} Pase(s)`;
+    if (totEl) {
+      const formattedTotal = Number(sale.total_paid || 0).toLocaleString('es-AR');
+      totEl.textContent = `$${formattedTotal} ${sale.currency || 'ARS'}`;
+    }
+    if (codeEl) codeEl.textContent = sale.ticket_code || 'SF-XXXX-XXXX';
+    if (methEl) methEl.textContent = sale.payment_method || 'Modo Prueba (Sandbox)';
+
+    if (pRow && pCode) {
+      if (sale.promoter_code) {
+        pCode.textContent = sale.promoter_code;
+        pRow.style.display = 'block';
+      } else {
+        pRow.style.display = 'none';
+      }
+    }
+
+    if (viewBtn && sale.ticket_code) {
+      viewBtn.href = `/payment-success.html?code=${encodeURIComponent(sale.ticket_code)}`;
+    }
 
     const qrContainer = document.getElementById('voucher-qr-code');
     if (qrContainer) {
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(sale.qr_data || sale.ticket_code)}`;
-      qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Ticket Code" style="width: 140px; height: 140px;">`;
+      const qrData = encodeURIComponent(sale.qr_data || sale.ticket_code);
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${qrData}`;
+      qrContainer.innerHTML = `<img src="${qrUrl}" alt="QR Ticket Code" style="width: 140px; height: 140px; display:block; margin:0 auto; border-radius:4px;">`;
     }
 
-    modal.classList.add('active');
+    this.openModal('voucher-modal');
+  },
+
+  copyVoucherCode() {
+    const code = this.currentVoucherCode || document.getElementById('voucher-code')?.textContent?.trim();
+    if (!code || code === 'SF-XXXX-XXXX') {
+      if (window.Toast) window.Toast.error('No hay un código de entrada activo.');
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        if (window.Toast) window.Toast.success(`¡Código ${code} copiado al portapapeles!`);
+      }).catch(() => {
+        this.fallbackCopyText(code);
+      });
+    } else {
+      this.fallbackCopyText(code);
+    }
+  },
+
+  fallbackCopyText(text) {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    try {
+      document.execCommand('copy');
+      if (window.Toast) window.Toast.success(`¡Código ${text} copiado al portapapeles!`);
+    } catch (e) {
+      if (window.Toast) window.Toast.info(`Código del ticket: ${text}`);
+    }
+    document.body.removeChild(tempInput);
   },
 
   // ==========================================
@@ -1032,6 +1091,11 @@ const LandingApp = {
         }
       };
     }
+  },
+
+  openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add('active');
   },
 
   closeModal(modalId) {
