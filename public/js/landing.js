@@ -452,22 +452,32 @@ const LandingApp = {
 
     this.selectedTier = tier;
     this.ticketQuantity = 1;
-    this.selectedPaymentMethod = 'Pago Seguro';
+    this.selectedPaymentMethod = 'dLocal Go';
 
     const currency = (this.activeEvent && this.activeEvent.currency) ? this.activeEvent.currency : 'ARS';
     
     const nameEl = document.getElementById('checkout-tier-name');
+    const badgeEl = document.getElementById('checkout-tier-badge');
     const unitEl = document.getElementById('checkout-unit-price');
-    const qtyInput = document.getElementById('checkout-qty-input');
-    const promoInput = document.getElementById('checkout-promoter-code');
+    const qtyDisplay = document.getElementById('checkout-qty-display');
+    const promoInput = document.getElementById('chk-promo') || document.getElementById('checkout-promoter-code');
+    const promoFeedback = document.getElementById('chk-promo-feedback');
 
     if (nameEl) nameEl.textContent = tier.name;
+    if (badgeEl) badgeEl.textContent = tier.badge || 'Pase Oficial';
     if (unitEl) unitEl.textContent = `$${tier.price.toLocaleString('es-AR')} ${currency} / unidad`;
-    if (qtyInput) qtyInput.value = '1';
+    if (qtyDisplay) qtyDisplay.textContent = '1';
     
     // Asignación silenciosa del código de referido
     if (promoInput) {
       promoInput.value = this.appliedPromoCode || '';
+    }
+    if (promoFeedback) {
+      if (this.appliedPromoCode) {
+        promoFeedback.innerHTML = `<span style="color:#10b981;"><i class="bi bi-check-circle-fill"></i> Promotor asignado: ${this.appliedPromoCode}</span>`;
+      } else {
+        promoFeedback.innerHTML = '';
+      }
     }
 
     this.updateCheckoutTotals();
@@ -478,75 +488,97 @@ const LandingApp = {
 
   updateCheckoutTotals() {
     if (!this.selectedTier) return;
-    const qtyInput = document.getElementById('checkout-qty-input');
-    const qty = Math.max(1, parseInt(qtyInput ? qtyInput.value : 1) || 1);
+    const qty = Math.max(1, parseInt(this.ticketQuantity) || 1);
     this.ticketQuantity = qty;
 
     const subtotal = this.selectedTier.price * qty;
     const total = subtotal;
     const currency = (this.activeEvent && this.activeEvent.currency) ? this.activeEvent.currency : 'ARS';
 
-    const subEl = document.getElementById('checkout-subtotal');
+    const qtyDisplay = document.getElementById('checkout-qty-display');
     const totalEl = document.getElementById('checkout-total-price');
 
-    if (subEl) subEl.textContent = `$${subtotal.toLocaleString('es-AR')} ${currency}`;
+    if (qtyDisplay) qtyDisplay.textContent = qty;
     if (totalEl) totalEl.textContent = `$${total.toLocaleString('es-AR')} ${currency}`;
   },
 
   initCheckoutHandlers() {
-    const minusBtn = document.getElementById('checkout-qty-minus');
-    const plusBtn = document.getElementById('checkout-qty-plus');
-    const qtyInput = document.getElementById('checkout-qty-input');
+    const minusBtn = document.getElementById('btn-qty-minus') || document.getElementById('checkout-qty-minus');
+    const plusBtn = document.getElementById('btn-qty-plus') || document.getElementById('checkout-qty-plus');
 
-    if (minusBtn && plusBtn && qtyInput) {
+    if (minusBtn) {
       minusBtn.onclick = () => {
-        let val = parseInt(qtyInput.value) || 1;
-        if (val > 1) {
-          qtyInput.value = val - 1;
+        if (this.ticketQuantity > 1) {
+          this.ticketQuantity--;
           this.updateCheckoutTotals();
         }
       };
-
-      plusBtn.onclick = () => {
-        let val = parseInt(qtyInput.value) || 1;
-        if (val < 10) {
-          qtyInput.value = val + 1;
-          this.updateCheckoutTotals();
-        }
-      };
-
-      qtyInput.onchange = () => this.updateCheckoutTotals();
     }
 
-    // Botones de método de pago
-    const paymentBtns = document.querySelectorAll('.payment-method-btn');
-    paymentBtns.forEach(btn => {
-      btn.onclick = () => {
-        paymentBtns.forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        this.selectedPaymentMethod = btn.getAttribute('data-method') || 'Pago Seguro';
+    if (plusBtn) {
+      plusBtn.onclick = () => {
+        const maxStock = this.selectedTier ? (this.selectedTier.stock - (this.selectedTier.sold_count || 0)) : 10;
+        const limit = Math.min(10, maxStock > 0 ? maxStock : 10);
+        if (this.ticketQuantity < limit) {
+          this.ticketQuantity++;
+          this.updateCheckoutTotals();
+        } else {
+          if (window.Toast) window.Toast.info(`Límite máximo por compra: ${limit} entradas.`);
+        }
       };
-    });
+    }
+
+    // Validación interactiva de código de promotor
+    const promoInput = document.getElementById('chk-promo') || document.getElementById('checkout-promoter-code');
+    const promoFeedback = document.getElementById('chk-promo-feedback');
+    if (promoInput && promoFeedback) {
+      let promoTimeout = null;
+      promoInput.addEventListener('input', () => {
+        clearTimeout(promoTimeout);
+        const code = promoInput.value.trim();
+        if (!code) {
+          promoFeedback.innerHTML = '';
+          return;
+        }
+        promoTimeout = setTimeout(async () => {
+          try {
+            const res = await API.promoters.validate(code);
+            if (res.valid) {
+              promoFeedback.innerHTML = `<span style="color:#10b981;"><i class="bi bi-check-circle-fill"></i> ${res.message || 'Código de vendedor válido'}</span>`;
+            } else {
+              promoFeedback.innerHTML = `<span style="color:#ef4444;"><i class="bi bi-exclamation-circle-fill"></i> Código no encontrado</span>`;
+            }
+          } catch (err) {
+            promoFeedback.innerHTML = '';
+          }
+        }, 500);
+      });
+    }
 
     // Envío del Formulario de Checkout
     const form = document.getElementById('checkout-form');
     if (form) {
       form.onsubmit = async (e) => {
         e.preventDefault();
-        const buyer_name = document.getElementById('buyer-name')?.value?.trim() || '';
-        const email = document.getElementById('buyer-email')?.value?.trim() || '';
-        const phone = document.getElementById('buyer-phone')?.value?.trim() || '';
-        const promo_code = document.getElementById('checkout-promoter-code')?.value?.trim() || this.appliedPromoCode || '';
+        const buyer_name = (document.getElementById('chk-name') || document.getElementById('buyer-name'))?.value?.trim() || '';
+        const email = (document.getElementById('chk-email') || document.getElementById('buyer-email'))?.value?.trim() || '';
+        const phone = (document.getElementById('chk-phone') || document.getElementById('buyer-phone'))?.value?.trim() || '';
+        const promo_code = (document.getElementById('chk-promo') || document.getElementById('checkout-promoter-code'))?.value?.trim() || this.appliedPromoCode || '';
 
         if (!buyer_name || !email) {
           if (window.Toast) window.Toast.error('Por favor completa tu nombre y correo electrónico.');
           return;
         }
 
+        if (!this.selectedTier) {
+          if (window.Toast) window.Toast.error('Por favor selecciona un pase para continuar.');
+          return;
+        }
+
         const submitBtn = form.querySelector('button[type="submit"]');
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Procesando...';
+          submitBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Conectando con dLocal Go...';
         }
 
         try {
@@ -557,26 +589,30 @@ const LandingApp = {
             tier_id: this.selectedTier.id,
             quantity: this.ticketQuantity,
             promo_code: promo_code,
-            payment_method: this.selectedPaymentMethod
+            payment_method: 'dLocal Go'
           });
 
           if (res.success) {
             this.closeModal('checkout-modal');
             if (res.redirect_url) {
-              if (window.Toast) window.Toast.info('Redirigiendo a la pasarela oficial de pago...');
+              if (window.Toast) window.Toast.info('Redirigiendo a la pasarela de pago oficial...');
               window.location.href = res.redirect_url;
             } else {
               if (window.Toast) window.Toast.success('¡Entrada confirmada con éxito!');
-              this.showTicketVoucher(res.sale);
+              if (typeof this.showTicketVoucher === 'function') {
+                this.showTicketVoucher(res.sale);
+              }
               this.loadTicketTiers();
             }
+          } else {
+            if (window.Toast) window.Toast.error(res.error || 'Error al procesar la compra.');
           }
         } catch (err) {
           if (window.Toast) window.Toast.error(err.message || 'Error al procesar la compra.');
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="bi bi-shield-check"></i> Abonar';
+            submitBtn.innerHTML = '<i class="bi bi-credit-card-2-front-fill"></i> Abonar';
           }
         }
       };
