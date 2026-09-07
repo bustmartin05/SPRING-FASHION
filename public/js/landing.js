@@ -61,28 +61,113 @@ const LandingApp = {
       if (data && data.event) {
         this.activeEvent = data.event;
         this.renderEventDetails(data.event);
+        this.updateCountdownTarget();
       }
     } catch (err) {
       console.error('Error cargando evento:', err);
     }
   },
 
+  formatEventDateDisplay(dateStr) {
+    if (!dateStr) return '21 Noviembre 2026 • 17:30 HS';
+    try {
+      let year, month, day, hour = '17', minute = '30';
+      if (dateStr.includes('T') || dateStr.includes(' ')) {
+        const separator = dateStr.includes('T') ? 'T' : ' ';
+        const [dPart, tPart] = dateStr.split(separator);
+        const [y, m, d] = dPart.split('-').map(Number);
+        year = y;
+        month = m - 1;
+        day = d;
+        if (tPart) {
+          const tSplitted = tPart.split(':');
+          hour = tSplitted[0] || '17';
+          minute = tSplitted[1] || '30';
+        }
+      } else if (dateStr.includes('-')) {
+        const [y, m, d] = dateStr.split('-').map(Number);
+        year = y;
+        month = m - 1;
+        day = d;
+      } else {
+        const dObj = new Date(dateStr);
+        if (!isNaN(dObj.getTime())) {
+          year = dObj.getFullYear();
+          month = dObj.getMonth();
+          day = dObj.getDate();
+          hour = String(dObj.getHours()).padStart(2, '0');
+          minute = String(dObj.getMinutes()).padStart(2, '0');
+        }
+      }
+
+      if (year && !isNaN(day) && !isNaN(month)) {
+        const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        return `${day} ${months[month]} ${year} • ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')} HS`;
+      }
+      return dateStr;
+    } catch (e) {
+      return dateStr;
+    }
+  },
+
   renderEventDetails(event) {
+    if (!event) return;
+
+    // 1. Título principal del evento en Hero y Brand Logo
+    const heroTitleEl = document.getElementById('hero-title');
+    if (heroTitleEl && event.title) {
+      const words = event.title.trim().split(' ');
+      if (words.length > 1) {
+        const lastWord = words.pop();
+        heroTitleEl.innerHTML = `${words.join(' ')} <span class="text-gradient">${lastWord}</span>`;
+      } else {
+        heroTitleEl.textContent = event.title;
+      }
+    }
+
+    const brandLogoEl = document.getElementById('brand-logo-text');
+    if (brandLogoEl && event.title) {
+      const words = event.title.trim().split(' ');
+      if (words.length > 1) {
+        const lastWord = words.pop();
+        brandLogoEl.innerHTML = `${words.join(' ')} <span class="text-gradient">${lastWord}</span>`;
+      } else {
+        brandLogoEl.textContent = event.title;
+      }
+    }
+
     const titleEls = document.querySelectorAll('.dynamic-event-title');
     titleEls.forEach(el => el.textContent = event.title);
 
+    // 2. Tipo de evento
     const typeEls = document.querySelectorAll('.dynamic-event-type');
-    typeEls.forEach(el => el.textContent = event.type);
+    typeEls.forEach(el => el.textContent = event.type || 'Desfile Show / Sunset');
 
+    // 3. Fecha y Hora formateadas en español
+    const dateEl = document.getElementById('hero-date');
+    if (dateEl && event.date) {
+      dateEl.textContent = this.formatEventDateDisplay(event.date);
+    }
+
+    // 4. Locación / Venue
+    const locEl = document.getElementById('hero-location');
+    if (locEl && event.location) {
+      locEl.textContent = event.location;
+    }
+
+    const footerLoc = document.getElementById('footer-location');
+    if (footerLoc && event.location) {
+      footerLoc.textContent = event.location;
+    }
+
+    // 5. Subtítulo / Tagline & Descripción
     const taglineEl = document.getElementById('hero-tagline');
     if (taglineEl) taglineEl.textContent = event.tagline || event.description;
-
-    const locEl = document.getElementById('hero-location');
-    if (locEl) locEl.textContent = event.location;
 
     const descEl = document.getElementById('experience-description');
     if (descEl) descEl.textContent = event.description;
 
+    // 6. Video de fondo
     const videoBg = document.getElementById('hero-video-element');
     if (videoBg && event.hero_video_url) {
       videoBg.src = event.hero_video_url;
@@ -746,41 +831,61 @@ const LandingApp = {
   },
 
   // ==========================================
-  // 9. CUENTA REGRESIVA
+  // 9. CUENTA REGRESIVA DINÁMICA
   // ==========================================
+  countdownTimerId: null,
+  targetCountdownDate: null,
+
   initCountdown() {
-    const targetDate = new Date('2026-11-21T17:30:00').getTime();
+    this.updateCountdownTarget();
+    if (!this.countdownTimerId) {
+      this.countdownTimerId = setInterval(() => this.updateCountdownDisplay(), 1000);
+    }
+  },
 
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      const dEl = document.getElementById('countdown-days');
-      const hEl = document.getElementById('countdown-hours');
-      const mEl = document.getElementById('countdown-mins');
-      const sEl = document.getElementById('countdown-secs');
-
-      if (difference <= 0) {
-        if (dEl) dEl.textContent = '00';
-        if (hEl) hEl.textContent = '00';
-        if (mEl) mEl.textContent = '00';
-        if (sEl) sEl.textContent = '00';
-        return;
+  updateCountdownTarget() {
+    if (this.activeEvent && this.activeEvent.date) {
+      let isoStr = this.activeEvent.date;
+      if (!isoStr.includes('T') && !isoStr.includes(' ')) {
+        isoStr = `${isoStr}T17:30:00`;
+      } else if (isoStr.includes(' ')) {
+        isoStr = isoStr.replace(' ', 'T');
       }
+      const parsed = new Date(isoStr).getTime();
+      this.targetCountdownDate = isNaN(parsed) ? new Date('2026-11-21T17:30:00').getTime() : parsed;
+    } else {
+      this.targetCountdownDate = new Date('2026-11-21T17:30:00').getTime();
+    }
+    this.updateCountdownDisplay();
+  },
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  updateCountdownDisplay() {
+    const targetDate = this.targetCountdownDate || new Date('2026-11-21T17:30:00').getTime();
+    const now = new Date().getTime();
+    const difference = targetDate - now;
 
-      if (dEl) dEl.textContent = String(days).padStart(2, '0');
-      if (hEl) hEl.textContent = String(hours).padStart(2, '0');
-      if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
-      if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
-    };
+    const dEl = document.getElementById('countdown-days');
+    const hEl = document.getElementById('countdown-hours');
+    const mEl = document.getElementById('countdown-mins');
+    const sEl = document.getElementById('countdown-secs');
 
-    updateTimer();
-    setInterval(updateTimer, 1000);
+    if (difference <= 0) {
+      if (dEl) dEl.textContent = '00';
+      if (hEl) hEl.textContent = '00';
+      if (mEl) mEl.textContent = '00';
+      if (sEl) sEl.textContent = '00';
+      return;
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    if (dEl) dEl.textContent = String(days).padStart(2, '0');
+    if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+    if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+    if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
   },
 
   // ==========================================

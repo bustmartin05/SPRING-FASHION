@@ -348,9 +348,29 @@ const AdminApp = {
         setVal('cfg-event-title', ev.title);
         setVal('cfg-event-type', ev.type);
         setVal('cfg-event-tagline', ev.tagline);
-        setVal('cfg-event-date', ev.date);
+
+        // Desglosar fecha y hora correctamente para los inputs tipo date y time
+        let datePart = '';
+        let timePart = '17:30';
+        if (ev.date) {
+          if (ev.date.includes('T')) {
+            const parts = ev.date.split('T');
+            datePart = parts[0];
+            timePart = (parts[1] || '17:30').substring(0, 5);
+          } else if (ev.date.includes(' ')) {
+            const parts = ev.date.split(' ');
+            datePart = parts[0];
+            timePart = (parts[1] || '17:30').substring(0, 5);
+          } else {
+            datePart = ev.date;
+          }
+        }
+
+        setVal('cfg-event-date', datePart);
+        setVal('cfg-event-time', timePart);
         setVal('cfg-event-location', ev.location);
         setVal('cfg-event-currency', ev.currency || 'ARS');
+        setVal('cfg-event-video-url', ev.hero_video_url);
         setVal('cfg-event-video', ev.hero_video_url);
         setVal('cfg-event-banner', ev.banner_url);
         setVal('cfg-event-status', ev.status);
@@ -361,7 +381,8 @@ const AdminApp = {
         setCheck('cfg-show-lineup', ev.show_lineup !== 0);
 
         // Media Kit
-        setVal('cfg-mediakit-link', ev.mediakit_download_link);
+        setVal('cfg-mediakit-url', ev.mediakit_download_link || ev.mediakit_file_url);
+        setVal('cfg-mediakit-link', ev.mediakit_download_link || ev.mediakit_file_url);
         setVal('cfg-mediakit-file', ev.mediakit_file_url);
         const fileStatus = document.getElementById('cfg-mediakit-file-status');
         if (fileStatus) {
@@ -1583,11 +1604,20 @@ const AdminApp = {
 
         const title = getV('cfg-event-title');
         const type = document.getElementById('cfg-event-type')?.value || 'Desfile Show / Sunset';
-        const tagline = getV('cfg-event-tagline');
-        const date = getV('cfg-event-date');
+        const tagline = getV('cfg-event-tagline') || getV('cfg-event-description');
+        const dateVal = getV('cfg-event-date');
+        const timeVal = getV('cfg-event-time') || '17:30';
+
+        let fullDateTime = dateVal;
+        if (dateVal && timeVal) {
+          fullDateTime = `${dateVal}T${timeVal}:00`;
+        } else if (dateVal) {
+          fullDateTime = `${dateVal}T17:30:00`;
+        }
+
         const location = getV('cfg-event-location');
         const currency = document.getElementById('cfg-event-currency')?.value || 'ARS';
-        const hero_video_url = getV('cfg-event-video');
+        const hero_video_url = getV('cfg-event-video-url') || getV('cfg-event-video');
         const banner_url = getV('cfg-event-banner');
         const status = document.getElementById('cfg-event-status')?.value || 'activo';
         const description = getV('cfg-event-description');
@@ -1595,18 +1625,24 @@ const AdminApp = {
         // Secciones Visibilidad & Media Kit & dLocal
         const show_experiences = getC('cfg-show-experiences');
         const show_lineup = getC('cfg-show-lineup');
-        const mediakit_download_link = getV('cfg-mediakit-link');
+        const mediakit_download_link = getV('cfg-mediakit-url') || getV('cfg-mediakit-link');
         const mediakit_file_url = getV('cfg-mediakit-file');
-        const dlocal_env = document.getElementById('cfg-dlocal-env')?.value || 'sandbox';
+        const dlocal_env = document.getElementById('cfg-dlocal-env')?.value || 'production';
         const dlocal_api_key = getV('cfg-dlocal-key');
         const dlocal_api_secret = getV('cfg-dlocal-secret');
+
+        const submitBtn = eventConfigForm.querySelector('button[type="submit"]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Guardando cambios...';
+        }
 
         try {
           const res = await API.events.update(this.activeEvent ? this.activeEvent.id : 1, {
             title,
             type,
             tagline,
-            date,
+            date: fullDateTime,
             location,
             currency,
             hero_video_url,
@@ -1626,12 +1662,17 @@ const AdminApp = {
           this.activeEvent = res.event;
           await this.loadFinancialStats();
           if (window.LandingApp) {
-            window.LandingApp.loadEventData();
-            window.LandingApp.loadExperiences();
-            window.LandingApp.loadArtists();
+            await window.LandingApp.loadEventData();
+            await window.LandingApp.loadExperiences();
+            await window.LandingApp.loadArtists();
           }
         } catch (err) {
-          window.Toast.error('Error al actualizar configuración.');
+          window.Toast.error(err.message || 'Error al actualizar configuración.');
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Guardar Configuración de Evento';
+          }
         }
       });
     }
