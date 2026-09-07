@@ -30,7 +30,7 @@
   <!-- ====================================================================
        NAVBAR SUPERIOR (LANDING & HEADER)
        ==================================================================== -->
-  <nav class="navbar glass-panel">
+  <nav class="navbar main-navbar glass-panel">
     <div class="container nav-container">
       <a href="#" class="brand-logo" onclick="AdminApp.hideAdminPanel()">
         <span class="brand-icon"><img src="/img/logo-icon.png" alt="Spring Fashion Logo"></span>
@@ -618,11 +618,13 @@
              ================================================================ -->
         <div class="admin-tab-pane active" id="tab-adm-roadmap">
           <div class="roadmap-progress-container">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
-              <h3 style="margin:0;"><i class="bi bi-signpost-split-fill text-gold"></i> Hoja de Ruta Secuencial de Producción</h3>
-              <div style="display:flex; gap:0.75rem; align-items:center;">
+            <div class="roadmap-header-row">
+              <div>
+                <h3 style="margin:0;"><i class="bi bi-signpost-split-fill text-gold"></i> Hoja de Ruta Secuencial de Producción</h3>
+              </div>
+              <div class="roadmap-header-actions">
                 <span id="admin-roadmap-progress-text" class="badge badge-gold">0% Completado</span>
-                <button type="button" class="btn btn-gold btn-sm" id="btn-save-roadmap" onclick="AdminApp.saveAllRoadmapSteps()">
+                <button type="button" class="btn btn-gold btn-sm btn-save-roadmap-btn" id="btn-save-roadmap" onclick="AdminApp.saveAllRoadmapSteps()">
                   <i class="bi bi-floppy-fill"></i> Guardar Estado del Roadmap
                 </button>
               </div>
@@ -1092,7 +1094,7 @@
                 <h3><i class="bi bi-people-fill text-gold"></i> Staff, Proveedores y Presupuestos por Rubro</h3>
                 <small style="color:var(--text-secondary);">Gestiona, busca, filtra y edita los presupuestos acordados con cada proveedor en vivo.</small>
               </div>
-              <div style="display:flex; gap:0.5rem;">
+              <div class="admin-card-header-actions">
                 <button class="btn btn-outline btn-sm" onclick="AdminApp.openNewCategoryModal()">
                   <i class="bi bi-plus-circle"></i> + Agregar nuevo rubro
                 </button>
@@ -1103,11 +1105,11 @@
             </div>
 
             <!-- Barra de Búsqueda y Filtro de Rubros -->
-            <div style="display:flex; gap:1rem; margin-bottom: 1.5rem; flex-wrap:wrap;">
-              <div style="flex-grow:1; min-width:240px; position:relative;">
+            <div class="filter-search-row">
+              <div class="search-input-wrap">
                 <input type="text" id="providers-search-input" class="form-control" placeholder="🔍 Buscar por proveedor, contacto o notas...">
               </div>
-              <div style="width:240px;">
+              <div class="filter-select-wrap">
                 <select id="providers-category-filter" class="form-control">
                   <option value="todos">Todos los Rubros</option>
                 </select>

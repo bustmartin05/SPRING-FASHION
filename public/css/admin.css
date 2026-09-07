@@ -204,6 +204,51 @@
   border-radius: var(--radius-lg);
   padding: 2rem;
   margin-bottom: 2rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.roadmap-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.roadmap-header-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-card-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-search-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  flex: 1 1 240px;
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.filter-select-wrap {
+  flex: 0 1 240px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .roadmap-progress-bar-wrap {
@@ -590,6 +635,62 @@
   .roadmap-progress-container {
     padding: 1.25rem 1rem;
     margin-bottom: 1.25rem;
+  }
+
+  .roadmap-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .roadmap-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .roadmap-header-actions .badge {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .roadmap-header-actions .btn,
+  .btn-save-roadmap-btn {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+  }
+
+  .admin-card-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .admin-card-header-actions .btn {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .filter-search-row {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .search-input-wrap,
+  .filter-select-wrap {
+    width: 100%;
+    flex: 1 1 100%;
   }
 
   .roadmap-step-item {

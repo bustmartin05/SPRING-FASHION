@@ -591,6 +591,8 @@
   border-radius: var(--radius-lg);
   background: var(--bg-card);
   border: 1px dashed var(--accent-gold);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* 7. TABLA DE ENTRADAS / SELECTOR DINÁMICO */
@@ -1111,6 +1113,35 @@
 
   .voucher-code {
     font-size: 1.1rem;
+  }
+
+  .mediakit-box {
+    margin-top: 2rem;
+    padding: 1.5rem 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  .mediakit-box h3 {
+    font-size: 1.15rem;
+    line-height: 1.35;
+    margin-bottom: 0.5rem;
+  }
+
+  .mediakit-box p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .mediakit-box .btn,
+  #btn-download-mediakit {
+    width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    padding: 0.85rem 1rem;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    justify-content: center;
   }
 }
 
