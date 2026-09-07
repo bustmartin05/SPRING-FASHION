@@ -987,8 +987,40 @@ const AdminApp = {
     }
   },
 
+  // ==========================================
+  // TAB 5: ESCÁNER QR & ACREDITACIONES EN PUERTA
+  // ==========================================
+  html5QrScanner: null,
+  isCameraScanning: false,
+  isProcessingQr: false,
+  currentScannerMode: 'manual',
+  currentPreviewTicket: null,
+
+  switchScannerMode(mode) {
+    this.currentScannerMode = mode;
+    const btnManual = document.getElementById('btn-mode-manual');
+    const btnCamera = document.getElementById('btn-mode-camera');
+    const viewManual = document.getElementById('scanner-view-manual');
+    const viewCamera = document.getElementById('scanner-view-camera');
+
+    if (mode === 'manual') {
+      if (btnManual) { btnManual.classList.add('btn-gold'); btnManual.classList.remove('btn-outline'); }
+      if (btnCamera) { btnCamera.classList.remove('btn-gold'); btnCamera.classList.add('btn-outline'); }
+      if (viewManual) viewManual.style.display = 'block';
+      if (viewCamera) viewCamera.style.display = 'none';
+      if (this.isCameraScanning) {
+        this.stopQrCamera();
+      }
+      setTimeout(() => document.getElementById('qr-manual-code-input')?.focus(), 100);
+    } else {
+      if (btnCamera) { btnCamera.classList.add('btn-gold'); btnCamera.classList.remove('btn-outline'); }
+      if (btnManual) { btnManual.classList.remove('btn-gold'); btnManual.classList.add('btn-outline'); }
+      if (viewCamera) viewCamera.style.display = 'block';
+      if (viewManual) viewManual.style.display = 'none';
+    }
+  },
+
   async startQrCamera() {
-    const readerEl = document.getElementById('qr-camera-reader');
     const startBtn = document.getElementById('btn-start-camera');
     const stopBtn = document.getElementById('btn-stop-camera');
     const selectWrap = document.getElementById('qr-camera-select-wrap');
@@ -996,7 +1028,7 @@ const AdminApp = {
     const placeholder = document.getElementById('qr-camera-placeholder');
 
     if (typeof Html5Qrcode === 'undefined') {
-      window.Toast.error('Cargando motor de cámara. Reintenta en 2 segundos.');
+      window.Toast.error('Cargando librería de escáner. Reintenta en 2 segundos.');
       return;
     }
 
@@ -1006,11 +1038,12 @@ const AdminApp = {
         this.html5QrScanner = new Html5Qrcode('qr-camera-reader');
       }
 
-      const devices = await Html5Qrcode.getCameras();
-      if (!devices || devices.length === 0) {
-        window.Toast.error('No se detectaron cámaras disponibles.');
-        if (placeholder) placeholder.style.display = 'block';
-        return;
+      // Obtener cámaras disponibles
+      let devices = [];
+      try {
+        devices = await Html5Qrcode.getCameras();
+      } catch (e) {
+        console.warn('No se pudieron listar cámaras explícitamente:', e);
       }
 
       if (cameraSelect && devices.length > 0) {
@@ -1018,18 +1051,38 @@ const AdminApp = {
         if (selectWrap) selectWrap.style.display = 'block';
       }
 
-      const cameraId = devices.length > 1 ? devices[devices.length - 1].id : devices[0].id;
-      if (cameraSelect) cameraSelect.value = cameraId;
+      const qrConfig = {
+        fps: 15,
+        qrbox: (viewfinderWidth, viewfinderHeight) => {
+          const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+          const qrboxSize = Math.floor(minEdge * 0.75);
+          return {
+            width: Math.max(200, qrboxSize),
+            height: Math.max(200, qrboxSize)
+          };
+        },
+        aspectRatio: 1.0,
+        disableFlip: false
+      };
+
+      const onScanSuccess = async (decodedText) => {
+        if (this.isProcessingQr) return;
+        this.isProcessingQr = true;
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        await this.validateQRCode(decodedText);
+        setTimeout(() => { this.isProcessingQr = false; }, 2500);
+      };
+
+      // Preferir cámara trasera ('environment') en móviles
+      let cameraConfig = { facingMode: "environment" };
+      if (devices.length === 1) {
+        cameraConfig = devices[0].id;
+      }
 
       await this.html5QrScanner.start(
-        cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        async (decodedText) => {
-          if (this.isProcessingQr) return;
-          this.isProcessingQr = true;
-          await this.validateQRCode(decodedText);
-          setTimeout(() => { this.isProcessingQr = false; }, 2500);
-        },
+        cameraConfig,
+        qrConfig,
+        onScanSuccess,
         () => {}
       );
 
@@ -1039,7 +1092,28 @@ const AdminApp = {
       window.Toast.success('Cámara activada. Enfoca el código QR.');
     } catch (err) {
       console.error('Error iniciando cámara:', err);
-      window.Toast.error('No se pudo acceder a la cámara. Revisa los permisos del navegador.');
+      // Fallback a cualquier cámara disponible
+      try {
+        const devices = await Html5Qrcode.getCameras();
+        if (devices && devices.length > 0) {
+          const fallbackId = devices[devices.length - 1].id;
+          await this.html5QrScanner.start(fallbackId, { fps: 15, qrbox: 240 }, async (decodedText) => {
+            if (this.isProcessingQr) return;
+            this.isProcessingQr = true;
+            await this.validateQRCode(decodedText);
+            setTimeout(() => { this.isProcessingQr = false; }, 2500);
+          }, () => {});
+          this.isCameraScanning = true;
+          if (startBtn) startBtn.style.display = 'none';
+          if (stopBtn) stopBtn.style.display = 'inline-flex';
+          window.Toast.success('Cámara activada.');
+          return;
+        }
+      } catch (fallbackErr) {
+        console.error('Fallback camera failed:', fallbackErr);
+      }
+
+      window.Toast.error('No se pudo acceder a la cámara. Revisa los permisos o usa el ingreso manual.');
       if (placeholder) placeholder.style.display = 'block';
     }
   },
@@ -1047,7 +1121,6 @@ const AdminApp = {
   async stopQrCamera() {
     const startBtn = document.getElementById('btn-start-camera');
     const stopBtn = document.getElementById('btn-stop-camera');
-    const selectWrap = document.getElementById('qr-camera-select-wrap');
     const placeholder = document.getElementById('qr-camera-placeholder');
 
     if (this.html5QrScanner && this.isCameraScanning) {
@@ -1061,7 +1134,6 @@ const AdminApp = {
 
     if (startBtn) startBtn.style.display = 'inline-flex';
     if (stopBtn) stopBtn.style.display = 'none';
-    if (selectWrap) selectWrap.style.display = 'none';
     if (placeholder) placeholder.style.display = 'block';
   },
 
@@ -1071,7 +1143,7 @@ const AdminApp = {
       await this.html5QrScanner.stop();
       await this.html5QrScanner.start(
         cameraId,
-        { fps: 10, qrbox: { width: 250, height: 250 } },
+        { fps: 15, qrbox: 240 },
         async (decodedText) => {
           if (this.isProcessingQr) return;
           this.isProcessingQr = true;
@@ -1082,6 +1154,251 @@ const AdminApp = {
       );
     } catch (e) {
       console.error('Error switching camera:', e);
+    }
+  },
+
+  async pasteFromClipboard() {
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        const text = await navigator.clipboard.readText();
+        const input = document.getElementById('qr-manual-code-input');
+        if (input && text) {
+          input.value = text.trim().toUpperCase();
+          input.focus();
+          window.Toast.info(`Código pegado: ${input.value}`);
+        }
+      } else {
+        const input = document.getElementById('qr-manual-code-input');
+        if (input) input.focus();
+      }
+    } catch (e) {
+      const input = document.getElementById('qr-manual-code-input');
+      if (input) input.focus();
+    }
+  },
+
+  clearManualInput() {
+    const input = document.getElementById('qr-manual-code-input');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  },
+
+  initQRScannerHandlers() {
+    const qrForm = document.getElementById('qr-scanner-input-form');
+    if (qrForm) {
+      qrForm.addEventListener('submit', (e) => this.handleManualQrSubmit(e));
+    }
+  },
+
+  async handleManualQrSubmit(e) {
+    if (e) e.preventDefault();
+    const codeInput = document.getElementById('qr-manual-code-input');
+    const code = codeInput?.value?.trim() || '';
+    if (!code) {
+      window.Toast.error('Por favor ingresa un código de ticket.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-submit-manual-scan');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Validando...';
+    }
+
+    try {
+      await this.validateQRCode(code);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-shield-check"></i> Validar Acreditación';
+      }
+    }
+  },
+
+  async validateQRCode(code) {
+    const resultBox = document.getElementById('qr-scan-result-card');
+    const placeholder = document.getElementById('qr-scanner-placeholder');
+    if (!resultBox) return;
+
+    if (placeholder) placeholder.style.display = 'none';
+    resultBox.style.display = 'block';
+    resultBox.className = 'glass-panel';
+    resultBox.style.background = 'rgba(24, 24, 31, 0.95)';
+    resultBox.style.border = '2px solid var(--accent-gold)';
+    resultBox.innerHTML = '<div style="text-align:center; padding:2rem 1rem;"><i class="bi bi-arrow-repeat spin" style="font-size:2rem; color:var(--accent-gold); display:block; margin-bottom:0.5rem;"></i> Verificando entrada en la base de datos...</div>';
+
+    try {
+      const res = await API.request('/api/tickets/validate-qr', {
+        method: 'POST',
+        body: JSON.stringify({ code })
+      });
+
+      if (res.status === 'valid') {
+        const s = res.sale;
+        this.playAudioBeep('success');
+        if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+        resultBox.style.border = '2px solid var(--status-green)';
+        resultBox.style.background = 'rgba(16, 185, 129, 0.14)';
+        resultBox.innerHTML = `
+          <div style="text-align:center; padding:1.25rem 1rem;">
+            <div style="font-size:3.5rem; color:var(--status-green); line-height:1;"><i class="bi bi-check-circle-fill"></i></div>
+            <h2 style="color:var(--status-green); margin:0.5rem 0 0.25rem; font-size:1.6rem;">¡ACCESO PERMITIDO!</h2>
+            <div style="font-size:1.35rem; font-weight:800; color:#fff; margin-bottom:0.25rem;">${s.buyer_name}</div>
+            <div style="color:var(--accent-gold); font-weight:700; font-size:1.1rem;">${s.tier_name || 'Entrada Oficial'} (${s.quantity} pase/s)</div>
+            
+            <div style="background:rgba(0,0,0,0.3); border-radius:var(--radius-md); padding:0.75rem; margin:1rem 0; text-align:left; font-size:0.88rem; display:flex; flex-direction:column; gap:0.35rem;">
+              <div>Código: <strong style="font-family:var(--font-mono); color:var(--accent-gold);">${s.ticket_code}</strong></div>
+              <div>Hora de Acreditación: <strong style="color:#fff;">${new Date().toLocaleTimeString()} hs</strong></div>
+              ${s.promoter_code ? `<div>Vendedor/RRPP: <span class="badge badge-purple">${s.promoter_code}</span></div>` : ''}
+            </div>
+
+            <button type="button" class="btn btn-outline btn-sm" onclick="AdminApp.resetScannerResult()" style="margin-top:0.25rem;">
+              <i class="bi bi-arrow-counterclockwise"></i> Validar Siguiente Ticket
+            </button>
+          </div>
+        `;
+        window.Toast.success(`¡Acceso Permitido! ${s.buyer_name}`);
+      } else if (res.status === 'already_used') {
+        const s = res.sale;
+        this.playAudioBeep('error');
+        if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+        resultBox.style.border = '2px solid var(--status-red)';
+        resultBox.style.background = 'rgba(239, 68, 68, 0.16)';
+        resultBox.innerHTML = `
+          <div style="text-align:center; padding:1.25rem 1rem;">
+            <div style="font-size:3.5rem; color:var(--status-red); line-height:1;"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h2 style="color:var(--status-red); margin:0.5rem 0 0.25rem; font-size:1.5rem;">⛔ ENTRADA YA UTILIZADA</h2>
+            <div style="font-size:1.25rem; font-weight:700; color:#fff;">${s.buyer_name}</div>
+            <div style="color:var(--text-secondary); font-size:0.95rem;">${s.tier_name} (${s.quantity} pase/s)</div>
+            <div style="background:rgba(0,0,0,0.3); border-radius:var(--radius-md); padding:0.75rem; margin:1rem 0; color:var(--status-red); font-weight:600; font-size:0.9rem;">
+              Ingresó el: ${new Date(s.used_at || s.created_at).toLocaleString('es-AR')}
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="AdminApp.resetScannerResult()">
+              <i class="bi bi-arrow-counterclockwise"></i> Validar Otro
+            </button>
+          </div>
+        `;
+        window.Toast.error('¡Entrada ya utilizada anteriormente!');
+      }
+
+      await this.loadAccessStats();
+      await this.loadSalesCRM();
+    } catch (err) {
+      this.playAudioBeep('error');
+      if (navigator.vibrate) navigator.vibrate([400]);
+      resultBox.style.border = '2px solid var(--status-red)';
+      resultBox.style.background = 'rgba(239, 68, 68, 0.14)';
+      resultBox.innerHTML = `
+        <div style="text-align:center; padding:1.5rem 1rem;">
+          <div style="font-size:3.5rem; color:var(--status-red); line-height:1;"><i class="bi bi-x-circle-fill"></i></div>
+          <h2 style="color:var(--status-red); margin:0.5rem 0 0.25rem; font-size:1.5rem;">❌ ENTRADA NO VÁLIDA</h2>
+          <p style="color:var(--text-secondary); font-size:0.92rem; margin:0.5rem 0 1rem;">${err.message || 'El código no existe en la base de datos o el pago aún no fue confirmado.'}</p>
+          <button type="button" class="btn btn-outline btn-sm" onclick="AdminApp.resetScannerResult()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reintentar
+          </button>
+        </div>
+      `;
+      window.Toast.error(err.message || 'Código QR o ticket no válido.');
+    }
+  },
+
+  resetScannerResult() {
+    const resultBox = document.getElementById('qr-scan-result-card');
+    const placeholder = document.getElementById('qr-scanner-placeholder');
+    const codeInput = document.getElementById('qr-manual-code-input');
+    if (resultBox) resultBox.style.display = 'none';
+    if (placeholder) placeholder.style.display = 'block';
+    if (codeInput) {
+      codeInput.value = '';
+      codeInput.focus();
+    }
+  },
+
+  async loadAccessStats() {
+    try {
+      const res = await API.request('/api/tickets/access-stats');
+      if (res && res.stats) {
+        const s = res.stats;
+        const scannedEl = document.getElementById('stats-qr-scanned');
+        const totalEl = document.getElementById('stats-qr-total');
+        const remainingEl = document.getElementById('stats-qr-remaining');
+
+        if (scannedEl) scannedEl.textContent = s.total_scanned;
+        if (totalEl) totalEl.textContent = s.total_sold;
+        if (remainingEl) remainingEl.textContent = s.remaining;
+      }
+    } catch (e) {}
+  },
+
+  // Previsualización y Validación de QR desde el CRM
+  previewTicketQR(ticketCode, buyerName, tierName, qrData, isUsed, totalPaid, currency) {
+    this.currentPreviewTicket = { ticketCode, buyerName, tierName, qrData, isUsed, totalPaid, currency };
+    
+    const modal = document.getElementById('ticket-qr-preview-modal');
+    if (!modal) return;
+
+    const codeEl = document.getElementById('preview-modal-ticket-code');
+    const buyerEl = document.getElementById('preview-modal-buyer-name');
+    const tierEl = document.getElementById('preview-modal-tier-name');
+    const totalEl = document.getElementById('preview-modal-total-paid');
+    const badgeEl = document.getElementById('preview-modal-status-badge');
+    const qrBox = document.getElementById('preview-modal-qr-container');
+    const linkEl = document.getElementById('preview-modal-voucher-link');
+    const valBtn = document.getElementById('btn-preview-modal-validate');
+
+    if (codeEl) codeEl.textContent = ticketCode;
+    if (buyerEl) buyerEl.textContent = buyerName || '-';
+    if (tierEl) tierEl.textContent = tierName || 'Pase Oficial';
+    if (totalEl) totalEl.textContent = `$${Number(totalPaid || 0).toLocaleString('es-AR')} ${currency || 'ARS'}`;
+    
+    if (badgeEl) {
+      badgeEl.className = isUsed ? 'badge badge-green' : 'badge badge-gold';
+      badgeEl.textContent = isUsed ? 'Acreditado (Ingresó)' : 'Sin Usar (Confirmado)';
+    }
+
+    if (valBtn) {
+      valBtn.innerHTML = isUsed ? '<i class="bi bi-check2-circle"></i> Ya Acreditado (Revalidar)' : '<i class="bi bi-shield-check"></i> Validar / Acreditar Ahora';
+    }
+
+    if (qrBox) {
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrData || ticketCode)}`;
+      qrBox.innerHTML = `<img src="${qrUrl}" alt="QR Ticket" style="width:200px; height:200px; display:block; margin:0 auto; border-radius:4px;">`;
+    }
+
+    if (linkEl) {
+      linkEl.href = `/payment-success.html?code=${encodeURIComponent(ticketCode)}`;
+    }
+
+    this.openModal('ticket-qr-preview-modal');
+  },
+
+  async validateFromPreviewModal() {
+    if (!this.currentPreviewTicket) return;
+    const { qrData, ticketCode } = this.currentPreviewTicket;
+    await this.validateQRCode(qrData || ticketCode);
+    const badgeEl = document.getElementById('preview-modal-status-badge');
+    if (badgeEl) {
+      badgeEl.className = 'badge badge-green';
+      badgeEl.textContent = 'Acreditado (Ingresó)';
+    }
+  },
+
+  async quickValidateTicket(ticketCode) {
+    if (!ticketCode) return;
+    await this.validateQRCode(ticketCode);
+  },
+
+  copyPreviewTicketCode() {
+    if (!this.currentPreviewTicket || !this.currentPreviewTicket.ticketCode) return;
+    const code = this.currentPreviewTicket.ticketCode;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        window.Toast.success(`¡Código ${code} copiado al portapapeles!`);
+      });
+    } else {
+      window.Toast.info(`Código: ${code}`);
     }
   },
 
@@ -1100,103 +1417,6 @@ const AdminApp = {
       console.error('Error reenviando correo:', err);
       window.Toast.error(err.message || 'Error al reenviar correo.');
     }
-  },
-
-  initQRScannerHandlers() {
-    const qrForm = document.getElementById('qr-scanner-input-form');
-    if (qrForm) {
-      qrForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const codeInput = document.getElementById('qr-manual-code-input');
-        const code = codeInput?.value?.trim() || '';
-        if (!code) return;
-
-        await this.validateQRCode(code);
-        if (codeInput) codeInput.value = '';
-      });
-    }
-  },
-
-    async validateQRCode(code) {
-    const resultBox = document.getElementById('qr-scan-result-card');
-    if (!resultBox) return;
-
-    resultBox.style.display = 'block';
-    resultBox.className = 'glass-panel';
-    resultBox.innerHTML = '<div style="text-align:center; padding:1.5rem;"><i class="bi bi-arrow-repeat spin"></i> Verificando entrada en la base de datos...</div>';
-
-    try {
-      const res = await API.request('/api/tickets/validate-qr', {
-        method: 'POST',
-        body: JSON.stringify({ code })
-      });
-
-      if (res.status === 'valid') {
-        const s = res.sale;
-        this.playAudioBeep('success');
-        resultBox.style.border = '2px solid var(--status-green)';
-        resultBox.style.background = 'rgba(16, 185, 129, 0.12)';
-        resultBox.innerHTML = `
-          <div style="text-align:center; padding:1.5rem;">
-            <div style="font-size:3.2rem; color:var(--status-green);"><i class="bi bi-check-circle-fill"></i></div>
-            <h2 style="color:var(--status-green); margin:0.5rem 0;">¡ACCESO PERMITIDO!</h2>
-            <div style="font-size:1.3rem; font-weight:700;">${s.buyer_name}</div>
-            <div style="color:var(--accent-gold); font-weight:600; font-size:1.05rem; margin:0.25rem 0;">${s.tier_name} (${s.quantity} pase/s)</div>
-            <div style="font-family:var(--font-mono); margin-top:0.5rem; color:var(--text-muted); font-size:0.9rem;">Código: ${s.ticket_code}</div>
-            <small style="color:var(--text-secondary); display:block; margin-top:0.6rem;">Acreditado a las ${new Date().toLocaleTimeString()} hs</small>
-          </div>
-        `;
-        window.Toast.success(`Acceso Permitido: ${s.buyer_name}`);
-      } else if (res.status === 'already_used') {
-        const s = res.sale;
-        this.playAudioBeep('error');
-        resultBox.style.border = '2px solid var(--status-red)';
-        resultBox.style.background = 'rgba(239, 68, 68, 0.15)';
-        resultBox.innerHTML = `
-          <div style="text-align:center; padding:1.5rem;">
-            <div style="font-size:3.2rem; color:var(--status-red);"><i class="bi bi-exclamation-triangle-fill"></i></div>
-            <h2 style="color:var(--status-red); margin:0.5rem 0;">⛔ ENTRADA YA UTILIZADA</h2>
-            <div style="font-size:1.2rem; font-weight:700;">${s.buyer_name}</div>
-            <div style="color:var(--text-secondary); font-size:1rem;">${s.tier_name} (${s.quantity} pase/s)</div>
-            <div style="margin-top:0.6rem; color:var(--status-red); font-weight:600;">
-              Ingresó el: ${new Date(s.used_at || s.created_at).toLocaleString()}
-            </div>
-          </div>
-        `;
-        window.Toast.error('¡Entrada ya utilizada anteriormente!');
-      }
-
-      await this.loadAccessStats();
-      await this.loadSalesCRM();
-    } catch (err) {
-      this.playAudioBeep('error');
-      resultBox.style.border = '2px solid var(--status-red)';
-      resultBox.style.background = 'rgba(239, 68, 68, 0.12)';
-      resultBox.innerHTML = `
-        <div style="text-align:center; padding:1.5rem;">
-          <div style="font-size:3.2rem; color:var(--status-red);"><i class="bi bi-x-circle-fill"></i></div>
-          <h2 style="color:var(--status-red); margin:0.5rem 0;">❌ ENTRADA INVÁLIDA</h2>
-          <p style="color:var(--text-secondary);">${err.message || 'El código no existe en la base de datos.'}</p>
-        </div>
-      `;
-      window.Toast.error(err.message || 'Código QR no válido.');
-    }
-  },
-
-  async loadAccessStats() {
-    try {
-      const res = await API.request('/api/tickets/access-stats');
-      if (res && res.stats) {
-        const s = res.stats;
-        const scannedEl = document.getElementById('stats-qr-scanned');
-        const totalEl = document.getElementById('stats-qr-total');
-        const remainingEl = document.getElementById('stats-qr-remaining');
-
-        if (scannedEl) scannedEl.textContent = s.total_scanned;
-        if (totalEl) totalEl.textContent = s.total_sold;
-        if (remainingEl) remainingEl.textContent = s.remaining;
-      }
-    } catch (e) {}
   },
 
   // ==========================================
@@ -1368,35 +1588,79 @@ const AdminApp = {
       const res = await API.tickets.getSales();
       this.sales = res.sales || [];
       const body = document.getElementById('sales-crm-table-body');
+      const quickChipsBox = document.getElementById('quick-tickets-chips-container');
+      
+      // Actualizar chips de prueba rápida en Tab 5
+      if (quickChipsBox) {
+        if (this.sales.length === 0) {
+          quickChipsBox.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">No hay tickets emitidos aún. Realiza una compra de prueba en la landing.</span>';
+        } else {
+          // Mostrar los últimos 6 tickets para validación rápida
+          const recentTickets = this.sales.slice(0, 6);
+          quickChipsBox.innerHTML = recentTickets.map(s => `
+            <button type="button" class="btn btn-xs ${s.is_used ? 'btn-outline text-muted' : 'btn-gold'}" style="font-family:var(--font-mono); display:inline-flex; align-items:center; gap:0.35rem;" onclick="AdminApp.quickValidateTicket('${s.ticket_code}')" title="Clic para validar: ${s.buyer_name} (${s.tier_name})">
+              <i class="bi ${s.is_used ? 'bi-check-all text-green' : 'bi-qr-code'}"></i>
+              <span>${s.ticket_code}</span>
+              <small style="opacity:0.8;">(${s.buyer_name.split(' ')[0]})</small>
+            </button>
+          `).join('');
+        }
+      }
+
       if (!body) return;
 
       if (this.sales.length === 0) {
-        body.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">Aún no hay compras registradas.</td></tr>`;
+        body.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:2rem; color:var(--text-muted);">Aún no hay compras registradas. Realiza una compra en la web para verla aquí.</td></tr>`;
         return;
       }
 
-      body.innerHTML = this.sales.map(s => `
-                <tr>
-          <td><strong style="font-family:var(--font-mono); color:var(--accent-gold);">${s.ticket_code || 'SF-2026'}</strong></td>
-          <td><strong>${s.buyer_name}</strong><br><small class="text-muted">${s.email} | ${s.phone || ''}</small></td>
-          <td><span class="badge badge-sunset">${s.tier_name || 'Pass'}</span></td>
-          <td>${s.quantity}</td>
-          <td><strong>${s.total_paid.toLocaleString('es-AR')}</strong></td>
-          <td>${s.promoter_code ? `<span class="badge badge-purple">${s.promoter_code}</span>` : '<span class="text-muted">Directo</span>'}</td>
-          <td>
-            <span class="badge ${s.is_used ? 'badge-green' : 'badge-gold'}">
-              ${s.is_used ? 'Ingresado' : 'Sin Usar'}
-            </span>
-          </td>
-          <td><span class="badge badge-gold">${s.payment_method}</span></td>
-          <td><small>${new Date(s.created_at).toLocaleString('es-AR')}</small></td>
-          <td>
-            <button class="btn btn-outline btn-xs" onclick="AdminApp.resendTicketEmail('${s.ticket_code}')" title="Reenviar Voucher y QR por Email">
-              <i class="bi bi-envelope-arrow-up"></i> Reenviar
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      const currency = (this.activeEvent && this.activeEvent.currency) ? this.activeEvent.currency : 'ARS';
+
+      body.innerHTML = this.sales.map(s => {
+        const safeBuyer = (s.buyer_name || '').replace(/'/g, "\\'");
+        const safeTier = (s.tier_name || 'Pass').replace(/'/g, "\\'");
+        const safeQr = (s.qr_code || s.ticket_code || '').replace(/'/g, "\\'");
+        const qrThumbUrl = `https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(s.qr_code || s.ticket_code)}`;
+
+        return `
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;" onclick="AdminApp.previewTicketQR('${s.ticket_code}', '${safeBuyer}', '${safeTier}', '${safeQr}', ${s.is_used ? 1 : 0}, '${s.total_paid}', '${currency}')" title="Clic para ampliar y escanear código QR">
+                <img src="${qrThumbUrl}" alt="QR" style="width:34px; height:34px; border-radius:4px; background:#fff; padding:2px; display:inline-block; border:1px solid rgba(255,255,255,0.2);">
+                <strong style="font-family:var(--font-mono); color:var(--accent-gold); font-size:0.92rem;">${s.ticket_code || 'SF-2026'}</strong>
+              </div>
+            </td>
+            <td>
+              <strong>${s.buyer_name}</strong><br>
+              <small class="text-muted">${s.email}${s.phone ? ' • ' + s.phone : ''}</small>
+            </td>
+            <td><span class="badge badge-sunset">${s.tier_name || 'Pass'}</span></td>
+            <td><strong>${s.quantity}</strong></td>
+            <td><strong style="color:var(--status-green);">$${Number(s.total_paid || 0).toLocaleString('es-AR')}</strong></td>
+            <td>${s.promoter_code ? `<span class="badge badge-purple">${s.promoter_code}</span>` : '<span class="text-muted">Directo</span>'}</td>
+            <td>
+              <span class="badge ${s.is_used ? 'badge-green' : 'badge-gold'}">
+                <i class="bi ${s.is_used ? 'bi-check2-circle' : 'bi-clock'}"></i> ${s.is_used ? 'Acreditado' : 'Sin Usar'}
+              </span>
+            </td>
+            <td><span class="badge badge-gold" style="font-size:0.75rem;">${s.payment_method || 'dLocal Go'}</span></td>
+            <td><small style="color:var(--text-muted);">${new Date(s.created_at).toLocaleDateString('es-AR')} ${new Date(s.created_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}</small></td>
+            <td>
+              <div class="table-actions" style="display:flex; gap:0.35rem; flex-wrap:nowrap;">
+                <button class="btn btn-outline btn-xs" onclick="AdminApp.previewTicketQR('${s.ticket_code}', '${safeBuyer}', '${safeTier}', '${safeQr}', ${s.is_used ? 1 : 0}, '${s.total_paid}', '${currency}')" title="Ver y Escanear QR en Grande">
+                  <i class="bi bi-qr-code"></i> QR
+                </button>
+                <button class="btn ${s.is_used ? 'btn-outline text-muted' : 'btn-gold'} btn-xs" onclick="AdminApp.quickValidateTicket('${s.ticket_code}')" title="Validar Acreditación Directa">
+                  <i class="bi bi-shield-check"></i> ${s.is_used ? 'Revalidar' : 'Validar'}
+                </button>
+                <button class="btn btn-outline btn-xs" onclick="AdminApp.resendTicketEmail('${s.ticket_code}')" title="Reenviar Voucher por Email">
+                  <i class="bi bi-envelope-arrow-up"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
     } catch (err) {
       console.error('Error ventas CRM:', err);
     }

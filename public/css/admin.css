@@ -380,3 +380,231 @@
 .media-preview-box:hover {
   border-color: var(--accent-gold);
 }
+
+/* ==========================================================================
+   ESTILOS DEDICADOS: ESCÁNER QR, INGRESO MANUAL & RESPONSIVE MÓVIL
+   ========================================================================== */
+
+/* Grid Principal del Escáner */
+.scanner-layout-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.scanner-subview {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+/* Selector de Modo (Manual / Cámara) */
+.scanner-mode-switch-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  padding: 0.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  width: fit-content;
+}
+
+.scanner-mode-btn {
+  padding: 0.6rem 1.25rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+}
+
+/* Chips de Acceso Rápido para Pruebas */
+.quick-chips-wrap {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-chips-wrap .btn {
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.quick-chips-wrap .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Visor de Cámara Responsive con Guía de Escaneo */
+.qr-camera-viewport-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+.qr-camera-reader-box {
+  width: 100%;
+  min-height: 280px;
+  max-height: 380px;
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.qr-camera-reader-box video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: var(--radius-md);
+}
+
+.qr-cam-icon {
+  font-size: 3.2rem;
+  opacity: 0.4;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--accent-gold);
+}
+
+/* ==========================================================================
+   OPTIMIZACIONES MÓVILES (SMARTPHONES & TABLETS)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .scanner-layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scanner-mode-switch-wrapper {
+    width: 100%;
+  }
+
+  .scanner-mode-switch-wrapper .scanner-mode-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-portal-wrapper {
+    padding-top: 75px;
+  }
+
+  .admin-header {
+    padding: 1rem 0;
+    margin-bottom: 1.25rem;
+  }
+
+  .admin-title-wrap h1 {
+    font-size: 1.35rem;
+  }
+
+  .admin-title-wrap p {
+    font-size: 0.82rem;
+  }
+
+  .admin-card {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .admin-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-card-header > div {
+    width: 100%;
+  }
+
+  .admin-nav-tabs {
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-tab-btn {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.82rem;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  }
+
+  .finance-kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .finance-kpi-grid.scanner-kpi-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .kpi-card {
+    padding: 1rem;
+  }
+
+  .kpi-value {
+    font-size: 1.5rem;
+  }
+
+  .kpi-header span {
+    font-size: 0.72rem;
+  }
+
+  .kpi-footer {
+    font-size: 0.72rem;
+  }
+
+  /* Tablas adaptadas para desplazamiento táctil */
+  .table-responsive {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+  }
+
+  .crud-table th, 
+  .crud-table td {
+    padding: 0.75rem 0.6rem;
+    font-size: 0.82rem;
+  }
+
+  .table-actions {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  /* Modales en móvil */
+  .modal-content {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    padding: 1.25rem 1rem !important;
+    margin: 1rem auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .finance-kpi-grid.scanner-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .manual-code-input-group input {
+    font-size: 1.15rem !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .qr-camera-reader-box {
+    min-height: 240px;
+    max-height: 300px;
+  }
+}
