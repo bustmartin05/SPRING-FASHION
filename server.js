@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Directorio para uploads estáticos
-const uploadsDir = path.join(__dirname, 'public', 'uploads');
+const uploadsDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -1468,8 +1468,14 @@ app.get('*', (req, res) => {
 });
 
 // Inicializar base de datos y arrancar servidor
-initDatabase().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor Spring Fashion activo en http://localhost:${PORT}`);
-  });
-});
+if (require.main === module) {
+  initDatabase().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor Spring Fashion activo en http://localhost:${PORT}`);
+    });
+  }).catch(err => console.error('Error iniciando base de datos:', err));
+} else {
+  initDatabase().catch(err => console.error('Error initDatabase en Vercel:', err));
+}
+
+module.exports = app;

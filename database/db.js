@@ -3,7 +3,10 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 
-const dbPath = path.resolve(__dirname, 'spring_fashion.db');
+const isVercel = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const dbPath = isVercel
+  ? path.join('/tmp', 'spring_fashion.db')
+  : path.resolve(__dirname, 'spring_fashion.db');
 const dbDir = path.dirname(dbPath);
 
 if (!fs.existsSync(dbDir)) {
