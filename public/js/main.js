@@ -67,14 +67,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuBtn = document.querySelector('.mobile-menu-toggle');
   const navLinks = document.querySelector('.nav-links');
   if (menuBtn && navLinks) {
-    menuBtn.addEventListener('click', () => {
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       navLinks.classList.toggle('mobile-open');
     });
 
-    navLinks.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => {
+    // Cerrar el menú desplegable al hacer clic en cualquier enlace o botón interno
+    navLinks.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('click', () => {
         navLinks.classList.remove('mobile-open');
       });
+    });
+
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+        navLinks.classList.remove('mobile-open');
+      }
     });
   }
 });

@@ -46,21 +46,32 @@
         <li><a href="#testimonios">Comunidad</a></li>
         <li><a href="#alianzas">Alianzas B2B</a></li>
         <li><a href="#faq">FAQ</a></li>
+        <li class="mobile-menu-actions">
+          <a href="#entradas" class="btn btn-primary btn-block mobile-menu-item">
+            <i class="bi bi-ticket-perforated-fill"></i> Comprar Entradas
+          </a>
+          <button type="button" class="btn btn-outline btn-block open-admin-btn mobile-menu-item">
+            <i class="bi bi-speedometer2 text-gold"></i> Panel Backoffice
+          </button>
+          <button type="button" class="btn btn-outline btn-block theme-toggle-btn mobile-menu-item">
+            <i class="bi bi-sun-fill text-gold"></i> Cambiar Modo (Día / Noche)
+          </button>
+        </li>
       </ul>
 
       <div class="nav-actions">
-        <!-- Switcher de Modo Día / Noche -->
-        <button class="btn-icon theme-toggle-btn" title="Cambiar Tema (Día/Noche)">
+        <!-- Switcher de Modo Día / Noche (Desktop) -->
+        <button class="btn-icon theme-toggle-btn desktop-only" title="Cambiar Tema (Día/Noche)">
           <i class="bi bi-sun-fill text-gold"></i>
         </button>
 
-        <!-- Botón de Acceso Admin -->
-        <button class="btn btn-outline btn-sm open-admin-btn" title="Panel de Producción y Finanzas">
+        <!-- Botón de Acceso Admin (Desktop) -->
+        <button class="btn btn-outline btn-sm open-admin-btn desktop-only" title="Panel de Producción y Finanzas">
           <i class="bi bi-speedometer2"></i> Backoffice
         </button>
 
-        <!-- CTA Entradas -->
-        <a href="#entradas" class="btn btn-primary btn-sm">
+        <!-- CTA Entradas (Desktop) -->
+        <a href="#entradas" class="btn btn-primary btn-sm desktop-only">
           <i class="bi bi-ticket-perforated-fill"></i> Tickets
         </a>
 
@@ -302,7 +313,7 @@
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-row-2">
               <div class="form-group">
                 <label>Tu Nombre y Apellido:</label>
                 <input type="text" id="community-name" class="form-control" placeholder="Ej.: Sofía Navarro" required>
@@ -400,7 +411,7 @@
 
           <div class="b2b-tab-pane active" id="tab-b2b-sponsor">
             <form id="b2b-sponsor-form">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Nombre de la Empresa / Marca:</label>
                   <input type="text" id="sp-company" class="form-control" placeholder="Ej.: Stella Winery" required>
@@ -411,7 +422,7 @@
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Email Corporativo:</label>
                   <input type="email" id="sp-email" class="form-control" placeholder="alianzas@marca.com" required>
@@ -445,7 +456,7 @@
 
           <div class="b2b-tab-pane" id="tab-b2b-staff">
             <form id="b2b-staff-form">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Nombre de Profesional / Empresa:</label>
                   <input type="text" id="st-name" class="form-control" placeholder="Ej.: Lumina Audiovisual" required>
@@ -465,7 +476,7 @@
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Email de Contacto:</label>
                   <input type="email" id="st-email" class="form-control" placeholder="contacto@staff.com" required>
@@ -695,7 +706,7 @@
               Simula escenarios proyectando entradas vendidas y tickets promedio para proyectar tu punto de equilibrio (Break-even).
             </p>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="form-row-3" style="margin-bottom: 1.5rem;">
               <div class="form-group">
                 <label>Pases Proyectados a Vender:</label>
                 <input type="number" id="calc-projected-tickets" class="form-control" value="300" min="1">
@@ -711,7 +722,7 @@
             </div>
 
             <div class="payout-summary-box glass-panel" style="padding:1.25rem; border-radius: var(--radius-md); border:1px solid var(--border-color);">
-              <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:1rem; text-align:center;">
+              <div class="sim-summary-grid">
                 <div>
                   <small style="color:var(--text-muted);">Ingreso Bruto Simulado</small>
                   <div style="font-size:1.2rem; font-weight:700; color:var(--text-primary);" id="sim-gross-rev">$0</div>
@@ -743,7 +754,7 @@
             </div>
 
             <form id="admin-event-config-form">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Nombre Oficial del Evento:</label>
                   <input type="text" id="cfg-event-title" class="form-control" required>
@@ -754,7 +765,7 @@
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Fecha del Evento:</label>
                   <input type="date" id="cfg-event-date" class="form-control" required>
@@ -765,7 +776,7 @@
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+              <div class="form-row-2-1">
                 <div class="form-group">
                   <label>Locación / Venue:</label>
                   <input type="text" id="cfg-event-location" class="form-control" required>
@@ -788,7 +799,7 @@
               </div>
 
               <!-- Media Kit PDF Upload / URL -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-row-2">
                 <div class="form-group">
                   <label>Media Kit PDF (URL Directa):</label>
                   <input type="text" id="cfg-mediakit-url" class="form-control" placeholder="https://... o sube archivo a la derecha">
@@ -803,7 +814,7 @@
               <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; border: 1px solid var(--border-color);">
                 <h4 style="margin-top:0; margin-bottom:0.75rem;"><i class="bi bi-shield-lock-fill text-gold"></i> Pasarela dLocal Go (Checkout de Producción)</h4>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div class="form-row-3">
                   <div class="form-group" style="margin:0;">
                     <label>Entorno dLocal Go:</label>
                     <select id="cfg-dlocal-env" class="form-control">
@@ -1167,7 +1178,7 @@
              TAB 8: SPONSORS, GALERÍA & COMUNIDAD
              ================================================================ -->
         <div class="admin-tab-pane" id="tab-adm-media">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div class="admin-grid-2">
             <div class="admin-card">
               <div class="admin-card-header">
                 <h3><i class="bi bi-gem text-gold"></i> Agregar Sponsor Aliado</h3>
@@ -1219,7 +1230,7 @@
                   <label>Título / Descripción de la Foto o Video:</label>
                   <input type="text" id="admin-gal-title" class="form-control" placeholder="Ej.: Pasarela Principal - Sunset 2026" required>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-row-2">
                   <div class="form-group">
                     <label>Tipo de Medio:</label>
                     <select id="admin-gal-type" class="form-control">
@@ -1366,7 +1377,7 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Nombre y Apellido del Titular:</label>
             <input type="text" id="chk-name" class="form-control" placeholder="Ej.: Valentina Rossi" required>
@@ -1530,7 +1541,7 @@
           <label>Nombre del Pase:</label>
           <input type="text" id="add-tier-name" class="form-control" placeholder="Ej.: Early Bird - General" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Precio Unitario ($):</label>
             <input type="number" id="add-tier-price" class="form-control" placeholder="25000" min="0" required>
@@ -1566,7 +1577,7 @@
           <label>Nombre del Pase:</label>
           <input type="text" id="edit-tier-name" class="form-control" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Precio ($):</label>
             <input type="number" id="edit-tier-price" class="form-control" required>
@@ -1613,7 +1624,7 @@
           <label>Descripción:</label>
           <textarea id="add-exp-desc" class="form-control" rows="3" placeholder="Detalla de qué se trata la experiencia..." required></textarea>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Ícono (Bootstrap Icon):</label>
             <input type="text" id="add-exp-icon" class="form-control" placeholder="bi-stars" value="bi-stars">
@@ -1649,7 +1660,7 @@
           <label>Descripción:</label>
           <textarea id="edit-exp-desc" class="form-control" rows="3" required></textarea>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Ícono (Bootstrap Icon):</label>
             <input type="text" id="edit-exp-icon" class="form-control" required>
@@ -1680,7 +1691,7 @@
           <label>Nombre Completo / Artístico:</label>
           <input type="text" id="add-art-name" class="form-control" placeholder="Ej.: Mariano Santos" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Rol / Título:</label>
             <input type="text" id="add-art-role" class="form-control" placeholder="Headliner DJ / Diseñador" required>
@@ -1725,7 +1736,7 @@
           <label>Nombre:</label>
           <input type="text" id="edit-art-name" class="form-control" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Rol:</label>
             <input type="text" id="edit-art-role" class="form-control" required>
@@ -1769,7 +1780,7 @@
           <label>Nombre y Apellido del Vendedor:</label>
           <input type="text" id="add-prom-name" class="form-control" placeholder="Ej.: Lucas Gómez" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Código Promotor (Único):</label>
             <input type="text" id="add-prom-code" class="form-control" placeholder="LUCAS2026" style="text-transform:uppercase;" required>
@@ -1779,7 +1790,7 @@
             <input type="text" id="add-prom-slug" class="form-control" placeholder="lucas" style="text-transform:lowercase;" required>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Email del Vendedor:</label>
             <input type="email" id="add-prom-email" class="form-control" placeholder="lucas@email.com" required>
@@ -1836,7 +1847,7 @@
           <label>Nombre del Proveedor o Ítem:</label>
           <input type="text" id="add-prov-name" class="form-control" placeholder="Ej.: Escenario & Sonido Andes" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Costo Acordado ($):</label>
             <input type="number" id="add-prov-cost" class="form-control" placeholder="1200000" min="0" required>
@@ -1876,7 +1887,7 @@
           <label>Nombre del Proveedor:</label>
           <input type="text" id="edit-provider-name-input" class="form-control" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-row-2">
           <div class="form-group">
             <label>Costo Acordado ($):</label>
             <input type="number" id="edit-provider-cost-input" class="form-control" required>

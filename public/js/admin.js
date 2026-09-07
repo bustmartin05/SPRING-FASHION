@@ -522,7 +522,7 @@ const AdminApp = {
 
       container.innerHTML = data.tiers.map(t => `
         <div class="glass-panel" style="padding: 1.5rem; margin-bottom: 1.25rem; border: 1px solid var(--border-color);">
-          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 1rem; align-items: flex-end; margin-bottom: 1rem;">
+          <div class="tier-edit-grid">
             <div>
               <label style="font-size:0.8rem; color:var(--text-muted);">Nombre del Pase / Entrada:</label>
               <input type="text" id="tier-name-${t.id}" class="form-control" value="${t.name}">
@@ -549,11 +549,11 @@ const AdminApp = {
             </div>
           </div>
 
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="tier-edit-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
             <div style="font-size:0.85rem; color:var(--text-secondary);">
               Vendidos: <strong>${t.sold_count}</strong> pases | Disponibles: <strong>${t.stock - t.sold_count}</strong>
             </div>
-            <div style="display:flex; gap:0.5rem;">
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
               <button class="btn btn-gold btn-sm" onclick="AdminApp.saveTierPrice(${t.id})">
                 <i class="bi bi-check-lg"></i> Guardar Cambios
               </button>
